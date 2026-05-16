@@ -351,6 +351,67 @@ function riasecFitScore(industry: string, top: RiasecCode[]): number {
   return s;
 }
 
+function replacementRiskLevel(pct: number): "低" | "中" | "高" {
+  if (pct < 35) return "低";
+  if (pct < 55) return "中";
+  return "高";
+}
+
+function buildIndustryDetail(
+  label: string,
+  fit: number,
+  avgRisk: number,
+  riasecTop: RiasecCode[],
+  jobCount: number,
+): Pick<
+  IndustryRecommendation,
+  "fitLevel" | "fitLabel" | "riskLevel" | "reason" | "detailBullets" | "sampleJobCount"
+> {
+  const fitLevel = fit >= 5 ? "high" : fit >= 3 ? "medium" : "low";
+  const fitLabel =
+    fitLevel === "high"
+      ? "兴趣高度契合"
+      : fitLevel === "medium"
+        ? "兴趣较为匹配"
+        : "备选方向";
+  const riskLevel = replacementRiskLevel(avgRisk);
+  const primaryInterest = RIASEC_NAMES[riasecTop[0]!] ?? "综合";
+  const secondaryInterest = riasecTop[1] ? RIASEC_NAMES[riasecTop[1]!] : null;
+
+  const detailBullets: string[] = [
+    `本站「${label}」收录 ${jobCount} 个代表性岗位，可对照本行业 2030 示意替代压力`,
+    `行业样本平均替代约 ${avgRisk.toFixed(1)}%，整体处于${riskLevel}压力区间`,
+  ];
+
+  if (fitLevel === "high") {
+    detailBullets.push(
+      `与您主导兴趣「${primaryInterest}」高度吻合${secondaryInterest ? `，兼有「${secondaryInterest}」倾向` : ""}`,
+    );
+    if (avgRisk < 40) {
+      detailBullets.push("替代压力相对较低，兼顾兴趣匹配与风险可控");
+    } else if (avgRisk >= 55) {
+      detailBullets.push("兴趣匹配度高，但行业替代压力偏高，建议关注技能升级与岗位细分");
+    }
+  } else if (fitLevel === "medium") {
+    detailBullets.push(
+      "霍兰德维度与行业典型任务有重叠，可结合现有技能栈评估转型或内部转岗路径",
+    );
+  } else {
+    detailBullets.push(
+      "兴趣契合一般；若考虑转型，可优先关注行业内低替代、偏现场或监管的细分岗位",
+    );
+  }
+
+  return {
+    fitLevel,
+    fitLabel,
+    riskLevel,
+    sampleJobCount: jobCount,
+    detailBullets,
+    reason: detailBullets.join("。"),
+  };
+}
+
 function recommendIndustries(
   answers: AssessmentAnswers,
   jobs: JobOccupation[],
@@ -374,21 +435,14 @@ function recommendIndustries(
 
     const riskPenalty = avgRisk > 58 ? -2 : avgRisk < 38 ? 1 : 0;
     const combined = fit + riskPenalty;
-
-    let reason = "";
-    if (fit >= 5) {
-      reason = `与您的${RIASEC_NAMES[riasecTop[0]!]}主导兴趣高度契合，且本库样本中该行业岗位较丰富`;
-    } else if (fit >= 3) {
-      reason = `与您的职业兴趣较为匹配，可结合本行业样本的替代压力做转型参考`;
-    } else {
-      reason = `兴趣契合度一般，但行业整体替代压力相对较低，适合作为备选方向`;
-    }
+    const jobCount = bucket.risks.length;
+    const detail = buildIndustryDetail(label, fit, avgRisk, riasecTop, jobCount);
 
     rows.push({
       industryLabel: label,
       fitScore: combined,
       avgReplacementRisk: Math.round(avgRisk * 10) / 10,
-      reason,
+      ...detail,
     });
   }
 

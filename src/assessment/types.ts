@@ -18,8 +18,17 @@ export interface AssessmentAnswers {
 export interface IndustryRecommendation {
   industryLabel: string;
   fitScore: number;
+  /** 兴趣契合档位 */
+  fitLevel?: "high" | "medium" | "low";
+  fitLabel?: string;
   avgReplacementRisk: number;
+  /** 行业替代压力档位 */
+  riskLevel?: "低" | "中" | "高";
+  /** 本站该行业样本岗位数 */
+  sampleJobCount?: number;
   reason: string;
+  /** 分条说明（展示用；旧版结果可能仅有 reason） */
+  detailBullets?: string[];
 }
 
 export interface AssessmentResult {

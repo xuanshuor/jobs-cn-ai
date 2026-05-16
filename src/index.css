@@ -674,8 +674,8 @@ code {
 
 .assessment-modal {
   position: relative;
-  width: min(520px, 100%);
-  max-height: min(90vh, 720px);
+  width: min(580px, 100%);
+  max-height: min(92vh, 760px);
   display: flex;
   flex-direction: column;
   background: linear-gradient(165deg, #1a1428 0%, #0c0814 100%);
@@ -712,16 +712,27 @@ code {
 }
 
 .assessment-skip {
-  background: transparent;
-  border: none;
-  color: #6d7a90;
-  font-size: 12px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 200, 120, 0.4);
+  border-radius: 8px;
+  color: #d8e4f4;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 8px 14px;
+  min-height: 36px;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    color 0.15s;
 }
 
 .assessment-skip:hover {
-  color: #a9b6ce;
+  color: #e8f7ff;
+  border-color: rgba(76, 245, 255, 0.5);
+  background: rgba(76, 245, 255, 0.1);
 }
 
 .assessment-progress {
@@ -738,8 +749,9 @@ code {
 .assessment-body {
   flex: 1;
   overflow-y: auto;
-  padding: 14px 18px;
+  padding: 20px 22px 24px;
   min-height: 200px;
+  scroll-padding-bottom: 16px;
 }
 
 .assessment-body--result {
@@ -748,39 +760,60 @@ code {
   gap: 10px;
 }
 
+.assessment-step {
+  display: flex;
+  flex-direction: column;
+}
+
+.assessment-body > .assessment-step + .assessment-step {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .assessment-step h3 {
-  margin: 0 0 10px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #d8e4f4;
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #e8f0fa;
+}
+
+.assessment-step h3 + .assessment-hint {
+  margin-top: -6px;
 }
 
 .assessment-hint {
-  margin: 0 0 8px;
-  font-size: 11px;
-  color: #7a879c;
+  margin: 0 0 18px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #8b97ad;
 }
 
 .assessment-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .assessment-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 152px), 1fr));
+  gap: 10px;
 }
 
 .assessment-opt {
-  padding: 10px 12px;
-  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 200, 120, 0.18);
   background: rgba(0, 0, 0, 0.28);
   color: #c8d4e8;
-  font-size: 12px;
-  line-height: 1.35;
+  font-size: 16px;
+  line-height: 1.5;
   text-align: left;
   cursor: pointer;
   transition:
@@ -817,23 +850,29 @@ code {
 
 .assessment-mbti__dim {
   margin: 0 0 10px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.06em;
   color: #8fd4c4;
   text-transform: uppercase;
 }
 
-.assessment-mbti--flat .assessment-mbti__item:last-child {
-  margin-bottom: 0;
+.assessment-mbti--flat,
+.assessment-riasec-scenarios {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .assessment-mbti__item {
-  margin-bottom: 12px;
-}
-
-.assessment-riasec-scenarios .assessment-mbti__item:last-child {
-  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 16px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(0, 0, 0, 0.22);
 }
 
 .assessment-hint--preview {
@@ -846,35 +885,49 @@ code {
 }
 
 .assessment-mbti__scene {
-  margin: 0 0 4px;
-  font-size: 10px;
-  line-height: 1.4;
-  letter-spacing: 0.03em;
-  color: rgba(143, 212, 196, 0.78);
+  margin: 0 0 6px;
+  padding-bottom: 8px;
+  font-size: 15px;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  color: rgba(143, 212, 196, 0.88);
+  border-bottom: 1px solid rgba(143, 212, 196, 0.15);
+}
+
+.assessment-mbti__item:not(:has(.assessment-mbti__scene)) .assessment-mbti__q {
+  padding-top: 0;
 }
 
 .assessment-mbti__q {
-  margin: 0 0 6px;
-  font-size: 12px;
-  color: #b0bdd0;
+  margin: 0;
+  padding: 10px 0 14px;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.55;
+  color: #e8f0fa;
 }
 
 .assessment-mbti__opts {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.assessment-mbti__opts .assessment-opt {
+  min-height: 50px;
 }
 
 .assessment-riasec {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .assessment-riasec__card {
   position: relative;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 14px 16px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 200, 120, 0.15);
   background: rgba(0, 0, 0, 0.25);
   color: #b8c5d8;
@@ -884,13 +937,13 @@ code {
 
 .assessment-riasec__card strong {
   display: block;
-  font-size: 13px;
+  font-size: 16px;
   color: #e8edf7;
   margin-bottom: 4px;
 }
 
 .assessment-riasec__card span {
-  font-size: 11px;
+  font-size: 15px;
   color: #7a879c;
 }
 
@@ -917,7 +970,7 @@ code {
 
 .assessment-confirm {
   margin: 0 0 12px;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1.55;
   color: #a9b6ce;
 }
@@ -1122,49 +1175,234 @@ code {
   color: #b8e8ff;
 }
 
-.assessment-industry-list {
+.assessment-result-card--industries {
+  padding: 16px 16px 14px;
+  border-color: rgba(240, 198, 116, 0.35);
+  background: linear-gradient(
+    165deg,
+    rgba(240, 198, 116, 0.1) 0%,
+    rgba(0, 0, 0, 0.28) 48%
+  );
+  box-shadow: 0 0 24px rgba(240, 198, 116, 0.06);
+}
+
+.assessment-result-card--industries h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #f0c674;
+  letter-spacing: 0.04em;
+}
+
+.assessment-industry-section__intro {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #9eb0c8;
+}
+
+.assessment-industry-cards {
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-.assessment-industry-list li {
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  font-size: 12px;
-  color: #a9b6ce;
-  line-height: 1.45;
-}
-
-.assessment-industry-list li:last-child {
-  border-bottom: none;
-}
-
-.assessment-industry-list__head {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.assessment-industry-card {
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.assessment-industry-card--fit-high {
+  border-color: rgba(240, 198, 116, 0.35);
+}
+
+.assessment-industry-card--fit-medium {
+  border-color: rgba(76, 245, 255, 0.22);
+}
+
+.assessment-industry-card__top {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: 10px 12px;
+  margin-bottom: 10px;
 }
 
 .assessment-industry-rank {
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-  background: rgba(255, 200, 120, 0.15);
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(255, 200, 120, 0.2);
   color: #f0c674;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
-.assessment-industry-risk {
-  margin-left: auto;
-  font-size: 10px;
-  color: #7a879c;
+.assessment-industry-card__title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.assessment-industry-card__title-block strong {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #f2f6fc;
+}
+
+.assessment-industry-fit-badge {
+  align-self: flex-start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.assessment-industry-fit-badge--high {
+  background: rgba(240, 198, 116, 0.18);
+  border: 1px solid rgba(240, 198, 116, 0.45);
+  color: #f0c674;
+}
+
+.assessment-industry-fit-badge--medium {
+  background: rgba(76, 245, 255, 0.1);
+  border: 1px solid rgba(76, 245, 255, 0.35);
+  color: #b8e8ff;
+}
+
+.assessment-industry-fit-badge--low {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #a9b6ce;
+}
+
+.assessment-industry-risk-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.assessment-industry-risk-pill--低 {
+  background: rgba(143, 212, 196, 0.12);
+  border: 1px solid rgba(143, 212, 196, 0.35);
+}
+
+.assessment-industry-risk-pill--中 {
+  background: rgba(240, 198, 116, 0.12);
+  border: 1px solid rgba(240, 198, 116, 0.35);
+}
+
+.assessment-industry-risk-pill--高 {
+  background: rgba(255, 107, 74, 0.12);
+  border: 1px solid rgba(255, 107, 74, 0.35);
+}
+
+.assessment-industry-risk-pill__value {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  color: #f2f6fc;
+}
+
+.assessment-industry-risk-pill--低 .assessment-industry-risk-pill__value {
+  color: #8fd4c4;
+}
+
+.assessment-industry-risk-pill--中 .assessment-industry-risk-pill__value {
+  color: #f0c674;
+}
+
+.assessment-industry-risk-pill--高 .assessment-industry-risk-pill__value {
+  color: #ff9a7a;
+}
+
+.assessment-industry-risk-pill__label {
+  font-size: 11px;
+  line-height: 1.3;
+  color: #8b97ad;
+  white-space: nowrap;
+}
+
+.assessment-industry-risk-bar {
+  height: 6px;
+  margin-bottom: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.assessment-industry-risk-bar__fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.assessment-industry-risk-bar__fill--低 {
+  background: linear-gradient(90deg, #5ee0c8, #8fd4c4);
+}
+
+.assessment-industry-risk-bar__fill--中 {
+  background: linear-gradient(90deg, #e8b86a, #f0c674);
+}
+
+.assessment-industry-risk-bar__fill--高 {
+  background: linear-gradient(90deg, #ff6b4a, #ff9a7a);
+}
+
+.assessment-industry-meta {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: #8b97ad;
+}
+
+.assessment-industry-meta strong {
+  color: #d8e4f4;
+  font-weight: 600;
+}
+
+.assessment-industry-details {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.assessment-industry-details li {
+  position: relative;
+  padding-left: 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #c8d4e8;
+}
+
+.assessment-industry-details li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(76, 245, 255, 0.65);
 }
 
 /* 平板：侧栏下移，Treemap 优先展示 */
@@ -1288,6 +1526,25 @@ code {
     border-right: none;
   }
 
+  .assessment-body {
+    padding: 18px max(16px, env(safe-area-inset-left, 0px)) 20px
+      max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  .assessment-body > .assessment-step + .assessment-step {
+    margin-top: 24px;
+    padding-top: 20px;
+  }
+
+  .assessment-mbti__item {
+    padding: 14px 16px;
+  }
+
+  .assessment-mbti--flat,
+  .assessment-riasec-scenarios {
+    gap: 14px;
+  }
+
   .assessment-header {
     padding-top: max(14px, env(safe-area-inset-top, 0px));
   }
@@ -1306,12 +1563,59 @@ code {
   }
 
   .assessment-opt {
-    min-height: 44px;
-    font-size: 13px;
+    min-height: 48px;
+    font-size: 17px;
   }
 
-  .assessment-mbti__opts {
+  .assessment-skip {
+    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 15px;
+  }
+
+  .assessment-step h3 {
+    font-size: 19px;
+  }
+
+  .assessment-mbti__q {
+    font-size: 18px;
+  }
+
+  .assessment-mbti__scene {
+    font-size: 16px;
+  }
+
+  .assessment-hint {
+    font-size: 16px;
+  }
+
+  .assessment-industry-card__top {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .assessment-industry-risk-pill {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    text-align: left;
+    margin-top: 4px;
+  }
+
+  .assessment-industry-risk-pill__value {
+    font-size: 22px;
+  }
+
+  .assessment-industry-details li {
+    font-size: 15px;
+  }
+
+  .assessment-grid,
+  .assessment-row {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .job-treemap-tooltip__close {

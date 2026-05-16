@@ -71,21 +71,105 @@ export function wrapTitleLines(
   return lines;
 }
 
-/** 按块宽高计算字号、标题换行与底部从业人数行 */
-export function fitTileLabel(title: string, rw: number, rh: number, mobile: boolean): TileLabelFit {
-  const padPx = mobile
-    ? 3
-    : Math.max(5, Math.min(10, Math.round(Math.min(rw, rh) * 0.028)));
+function buildLabelFit(
+  fs: number,
+  titleLineTexts: string[],
+  showEmploymentLine: boolean,
+  padPx: number,
+  innerH: number,
+  centerThreshold = 0.72,
+): TileLabelFit {
+  const metaSize = Math.max(6, Math.round(fs * META_RATIO * 10) / 10);
+  const titleUsedH = titleLineTexts.length * fs * TITLE_LINE_HEIGHT;
+  const empBlock = showEmploymentLine ? fs * 0.35 + metaLineHeight(metaSize) : 0;
+  const totalH = titleUsedH + empBlock;
+
+  return {
+    showText: titleLineTexts.length > 0,
+    showEmploymentLine,
+    fontSize: fs,
+    metaSize,
+    titleLineTexts,
+    padPx,
+    centerContent: totalH < innerH * centerThreshold,
+  };
+}
+
+/** 手机端：先保证职业名可见，仅余量充足时再显示从业人数 */
+function fitTileLabelMobile(title: string, rw: number, rh: number): TileLabelFit {
+  const padPx = 3;
+  const innerW = Math.max(1, rw - padPx * 2);
+  const innerH = Math.max(1, rh - padPx * 2);
+  const minFont = 6.5;
+  const maxTitleFont = 11.5;
+
+  const employmentFitsBelow = (
+    fs: number,
+    metaSize: number,
+    titleUsedH: number,
+  ): boolean => {
+    if (titleUsedH <= 0) return false;
+    const gap = fs * 0.35;
+    const empH = metaLineHeight(metaSize);
+    return innerH - titleUsedH >= empH + gap * 1.8;
+  };
+
+  if (innerW < 14 || innerH < 10) {
+    const fs = Math.max(minFont, Math.min(maxTitleFont, innerH * 0.52));
+    const titleLineTexts =
+      innerH >= fs * TITLE_LINE_HEIGHT * 0.85
+        ? wrapTitleLines(title, 1, innerW, fs)
+        : [];
+    return buildLabelFit(fs, titleLineTexts, false, padPx, innerH, 1);
+  }
+
+  for (let fontSize = maxTitleFont; fontSize >= minFont; fontSize -= 0.4) {
+    const fs = Math.round(fontSize * 10) / 10;
+    const metaSize = Math.max(6, Math.round(fs * META_RATIO * 10) / 10);
+    const lineH = fs * TITLE_LINE_HEIGHT;
+    const maxLines = Math.min(4, Math.max(1, Math.floor(innerH / lineH)));
+    const titleLineTexts = wrapTitleLines(title, maxLines, innerW, fs);
+    if (titleLineTexts.length === 0) continue;
+
+    const titleUsedH = titleLineTexts.length * lineH;
+    const showEmp = employmentFitsBelow(fs, metaSize, titleUsedH);
+    const empBlock = showEmp ? fs * 0.35 + metaLineHeight(metaSize) : 0;
+    if (titleUsedH + empBlock <= innerH + 0.5) {
+      return buildLabelFit(fs, titleLineTexts, showEmp, padPx, innerH);
+    }
+
+    for (let lines = titleLineTexts.length - 1; lines >= 1; lines--) {
+      const reduced = wrapTitleLines(title, lines, innerW, fs);
+      const used = reduced.length * lineH;
+      const showEmpReduced = employmentFitsBelow(fs, metaSize, used);
+      const block = used + (showEmpReduced ? fs * 0.35 + metaLineHeight(metaSize) : 0);
+      if (block <= innerH + 0.5) {
+        return buildLabelFit(fs, reduced, showEmpReduced, padPx, innerH);
+      }
+    }
+  }
+
+  const fs = minFont;
+  const metaSize = Math.max(6, fs * META_RATIO);
+  const titleLineTexts = wrapTitleLines(title, 1, innerW, fs);
+  const titleUsedH = titleLineTexts.length * fs * TITLE_LINE_HEIGHT;
+  const showEmp =
+    titleLineTexts.length > 0 &&
+    employmentFitsBelow(fs, metaSize, titleUsedH);
+  return buildLabelFit(fs, titleLineTexts, showEmp, padPx, innerH, 0.85);
+}
+
+/** 桌面端：标题与从业人数共同排布 */
+function fitTileLabelDesktop(title: string, rw: number, rh: number): TileLabelFit {
+  const padPx = Math.max(5, Math.min(10, Math.round(Math.min(rw, rh) * 0.028)));
   const innerW = Math.max(1, rw - padPx * 2);
   const innerH = Math.max(1, rh - padPx * 2);
 
-  const minFont = mobile ? 6.5 : 7.5;
-  const maxTitleFont = mobile
-    ? 11.5
-    : Math.min(22, Math.max(11, Math.sqrt(innerW * innerH) * 0.045));
+  const minFont = 7.5;
+  const maxTitleFont = Math.min(22, Math.max(11, Math.sqrt(innerW * innerH) * 0.045));
   const maxMetaFont = maxTitleFont * META_RATIO;
 
-  if (innerW < (mobile ? 14 : 22) || innerH < (mobile ? 10 : 14)) {
+  if (innerW < 22 || innerH < 14) {
     const metaSize = Math.max(6, Math.min(maxMetaFont, innerH * 0.55));
     return {
       showText: false,
@@ -98,7 +182,7 @@ export function fitTileLabel(title: string, rw: number, rh: number, mobile: bool
     };
   }
 
-  for (let fontSize = maxTitleFont; fontSize >= minFont; fontSize -= mobile ? 0.4 : 0.5) {
+  for (let fontSize = maxTitleFont; fontSize >= minFont; fontSize -= 0.5) {
     const fs = Math.round(fontSize * 10) / 10;
     const metaSize = Math.max(6, Math.round(fs * META_RATIO * 10) / 10);
     const gap = fs * 0.35;
@@ -115,7 +199,7 @@ export function fitTileLabel(title: string, rw: number, rh: number, mobile: bool
     }
 
     const maxLines = Math.min(
-      mobile ? 4 : 5,
+      5,
       Math.max(0, Math.floor(titleAreaH / (fs * TITLE_LINE_HEIGHT))),
     );
     const titleLineTexts = maxLines > 0 ? wrapTitleLines(title, maxLines, innerW, fs) : [];
@@ -124,15 +208,7 @@ export function fitTileLabel(title: string, rw: number, rh: number, mobile: bool
 
     if (totalH > innerH + 0.5) continue;
 
-    return {
-      showText: titleLineTexts.length > 0,
-      showEmploymentLine,
-      fontSize: fs,
-      metaSize,
-      titleLineTexts,
-      padPx,
-      centerContent: totalH < innerH * 0.72,
-    };
+    return buildLabelFit(fs, titleLineTexts, showEmploymentLine, padPx, innerH);
   }
 
   const fs = minFont;
@@ -147,4 +223,11 @@ export function fitTileLabel(title: string, rw: number, rh: number, mobile: bool
     padPx,
     centerContent: innerH < fs * 3,
   };
+}
+
+/** 按块宽高计算字号、标题换行与底部从业人数行 */
+export function fitTileLabel(title: string, rw: number, rh: number, mobile: boolean): TileLabelFit {
+  return mobile
+    ? fitTileLabelMobile(title, rw, rh)
+    : fitTileLabelDesktop(title, rw, rh);
 }

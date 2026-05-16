@@ -11,6 +11,7 @@ import type { JobOccupation } from "@/core/types";
 import type {
   AssessmentAnswers,
   AssessmentResult,
+  IndustryRecommendation,
   MbtiLetter,
   RiasecCode,
 } from "@/assessment/types";
@@ -665,6 +666,118 @@ function OptionRow({
   );
 }
 
+function resolveIndustryFitLevel(
+  ind: IndustryRecommendation,
+): "high" | "medium" | "low" {
+  if (ind.fitLevel) return ind.fitLevel;
+  if (ind.fitScore >= 5) return "high";
+  if (ind.fitScore >= 3) return "medium";
+  return "low";
+}
+
+function resolveIndustryRiskLevel(
+  ind: IndustryRecommendation,
+): "低" | "中" | "高" {
+  if (ind.riskLevel) return ind.riskLevel;
+  if (ind.avgReplacementRisk < 35) return "低";
+  if (ind.avgReplacementRisk < 55) return "中";
+  return "高";
+}
+
+function resolveIndustryFitLabel(ind: IndustryRecommendation): string {
+  if (ind.fitLabel) return ind.fitLabel;
+  const level = resolveIndustryFitLevel(ind);
+  if (level === "high") return "兴趣高度契合";
+  if (level === "medium") return "兴趣较为匹配";
+  return "备选方向";
+}
+
+function IndustryRecommendationsSection({
+  industries,
+}: {
+  industries: IndustryRecommendation[];
+}) {
+  return (
+    <section className="assessment-result-card assessment-result-card--industries">
+      <div className="assessment-industry-section__header">
+        <h3>建议关注的行业方向</h3>
+        <p className="assessment-industry-section__intro">
+          结合您的霍兰德兴趣排序，在本站职业样本库中匹配岗位丰富度与 2030
+          示意替代压力，供转型与择业参考（非投资建议）。
+        </p>
+      </div>
+
+      <ul className="assessment-industry-cards">
+        {industries.map((ind, i) => {
+          const fitLevel = resolveIndustryFitLevel(ind);
+          const riskLevel = resolveIndustryRiskLevel(ind);
+          const fitLabel = resolveIndustryFitLabel(ind);
+          const bullets =
+            ind.detailBullets && ind.detailBullets.length > 0
+              ? ind.detailBullets
+              : [ind.reason];
+          const riskPct = Math.min(100, Math.max(0, ind.avgReplacementRisk));
+
+          return (
+            <li
+              key={ind.industryLabel}
+              className={`assessment-industry-card assessment-industry-card--fit-${fitLevel}`}
+            >
+              <div className="assessment-industry-card__top">
+                <span className="assessment-industry-rank">{i + 1}</span>
+
+                <div className="assessment-industry-card__title-block">
+                  <strong>{ind.industryLabel}</strong>
+                  <span
+                    className={`assessment-industry-fit-badge assessment-industry-fit-badge--${fitLevel}`}
+                  >
+                    {fitLabel}
+                  </span>
+                </div>
+
+                <div
+                  className={`assessment-industry-risk-pill assessment-industry-risk-pill--${riskLevel}`}
+                >
+                  <span className="assessment-industry-risk-pill__value">
+                    {ind.avgReplacementRisk}%
+                  </span>
+                  <span className="assessment-industry-risk-pill__label">
+                    行业均值替代 · {riskLevel}压力
+                  </span>
+                </div>
+              </div>
+
+              <div
+                className="assessment-industry-risk-bar"
+                role="presentation"
+                aria-hidden
+              >
+                <div
+                  className={`assessment-industry-risk-bar__fill assessment-industry-risk-bar__fill--${riskLevel}`}
+                  style={{ width: `${riskPct}%` }}
+                />
+              </div>
+
+              {ind.sampleJobCount != null ? (
+                <p className="assessment-industry-meta">
+                  本站样本库含{" "}
+                  <strong>{ind.sampleJobCount}</strong> 个相关岗位
+                </p>
+              ) : null}
+
+              <ul className="assessment-industry-details">
+                {bullets.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
 function AssessmentResultView({
   result,
 
@@ -749,27 +862,9 @@ function AssessmentResultView({
           </div>
         </section>
 
-        <section className="assessment-result-card">
-          <h3>建议关注的行业方向</h3>
-
-          <ul className="assessment-industry-list">
-            {result.recommendedIndustries.map((ind, i) => (
-              <li key={ind.industryLabel}>
-                <div className="assessment-industry-list__head">
-                  <span className="assessment-industry-rank">{i + 1}</span>
-
-                  <strong>{ind.industryLabel}</strong>
-
-                  <span className="assessment-industry-risk">
-                    行业均值替代约 {ind.avgReplacementRisk}%
-                  </span>
-                </div>
-
-                <p>{ind.reason}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <IndustryRecommendationsSection
+          industries={result.recommendedIndustries}
+        />
 
         <AssessmentShareActions result={result} />
       </div>
