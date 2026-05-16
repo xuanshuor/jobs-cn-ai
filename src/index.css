@@ -612,6 +612,10 @@ code {
   text-transform: uppercase;
 }
 
+.assessment-mbti--flat .assessment-mbti__item:last-child {
+  margin-bottom: 0;
+}
+
 .assessment-mbti__item {
   margin-bottom: 12px;
 }

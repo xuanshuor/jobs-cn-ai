@@ -1,4 +1,4 @@
-import type { MbtiLetter, RiasecCode } from "./types";
+import type { AssessmentAnswers, MbtiLetter, RiasecCode } from "./types";
 
 export interface ChoiceOption {
   value: string;
@@ -245,8 +245,8 @@ export const RIASEC_SCENARIOS: RiasecScenario[] = [
 ];
 
 export const MBTI_STEP_GROUPS: { title: string; dimensions: MbtiDimension[] }[] = [
-  { title: "能量与信息（E/I · S/N）", dimensions: ["ei", "sn"] },
-  { title: "决策与节奏（T/F · J/P）", dimensions: ["tf", "jp"] },
+  { title: "与人相处、处理信息", dimensions: ["ei", "sn"] },
+  { title: "处事方式与日常节奏", dimensions: ["tf", "jp"] },
 ];
 
 /** 指定维度的 MBTI 题是否均已作答 */
@@ -261,6 +261,43 @@ export function mbtiCompleteForDimensions(
     if (vote !== q.optionA.letter && vote !== q.optionB.letter) return false;
   }
   return true;
+}
+
+/** 霍兰德情境题是否每题均已二选一 */
+export function riasecScenariosComplete(choices: RiasecCode[]): boolean {
+  for (let i = 0; i < RIASEC_SCENARIOS.length; i++) {
+    const s = RIASEC_SCENARIOS[i]!;
+    const pick = choices[i];
+    if (pick !== s.optionA.code && pick !== s.optionB.code) return false;
+  }
+  return true;
+}
+
+/** 测评是否已全部作答（提交前校验） */
+export function isAssessmentAnswersComplete(answers: AssessmentAnswers): boolean {
+  return (
+    !!answers.jobCategory &&
+    answers.taskTags.length >= 1 &&
+    answers.taskTags.length <= 4 &&
+    !!answers.experienceYears &&
+    !!answers.education &&
+    answers.aiToolUsage >= 1 &&
+    answers.aiToolUsage <= 5 &&
+    mbtiCompleteForDimensions(answers.mbtiVotes, ["ei", "sn", "tf", "jp"]) &&
+    riasecScenariosComplete(answers.riasecScenarioChoices)
+  );
+}
+
+export function createDefaultAnswers(): AssessmentAnswers {
+  return {
+    jobCategory: "",
+    experienceYears: "",
+    education: "",
+    taskTags: [],
+    aiToolUsage: 0,
+    mbtiVotes: MBTI_QUESTIONS.map(() => ""),
+    riasecScenarioChoices: [],
+  };
 }
 
 export const RIASEC_OPTIONS: { code: RiasecCode; label: string; hint: string }[] = [

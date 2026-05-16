@@ -20,11 +20,12 @@ import {
   EDUCATION_OPTIONS,
   EXPERIENCE_OPTIONS,
   JOB_CATEGORIES,
-  MBTI_DIMENSION_LABEL,
+  createDefaultAnswers,
+  isAssessmentAnswersComplete,
   MBTI_QUESTIONS,
   MBTI_STEP_GROUPS,
   mbtiCompleteForDimensions,
-  RIASEC_OPTIONS,
+  riasecScenariosComplete,
   RIASEC_SCENARIOS,
   TASK_TAGS,
 } from "@/assessment/questions";
@@ -32,7 +33,6 @@ import {
 import {
   evaluateAssessment,
   loadStoredResult,
-  resolveRiasecTop,
   saveStoredResult,
 } from "@/assessment/evaluate";
 
@@ -47,24 +47,6 @@ import { AssessmentShareActions } from "@/components/assessment/AssessmentShareA
 import { computeImpactColorDomain, impactTileSolid } from "@/config/theme";
 
 const TOTAL_STEPS = 7;
-
-const DEFAULT_MBTI_VOTES: (MbtiLetter | "")[] = MBTI_QUESTIONS.map(() => "");
-
-const DEFAULT_ANSWERS: AssessmentAnswers = {
-  jobCategory: "",
-
-  experienceYears: "",
-
-  education: "",
-
-  taskTags: [],
-
-  aiToolUsage: 3,
-
-  mbtiVotes: [...DEFAULT_MBTI_VOTES],
-
-  riasecScenarioChoices: [],
-};
 
 type Phase = "quiz" | "result";
 
@@ -93,7 +75,7 @@ export function CareerAssessmentModal({
 
   const [step, setStep] = useState(0);
 
-  const [answers, setAnswers] = useState<AssessmentAnswers>(DEFAULT_ANSWERS);
+  const [answers, setAnswers] = useState<AssessmentAnswers>(createDefaultAnswers);
 
   const [result, setResult] = useState<AssessmentResult | null>(initialResult);
 
@@ -101,15 +83,6 @@ export function CareerAssessmentModal({
     () => computeImpactColorDomain(jobs.map((j) => j.aiImpact)),
 
     [jobs],
-  );
-
-  const riasecPreview = useMemo(
-    () =>
-      answers.riasecScenarioChoices.length === RIASEC_SCENARIOS.length
-        ? resolveRiasecTop(answers.riasecScenarioChoices)
-        : [],
-
-    [answers.riasecScenarioChoices],
   );
 
   const canNext = useMemo(() => {
@@ -143,13 +116,18 @@ export function CareerAssessmentModal({
     }
 
     if (step === 5) {
-      return answers.riasecScenarioChoices.length === RIASEC_SCENARIOS.length;
+      return riasecScenariosComplete(answers.riasecScenarioChoices);
+    }
+
+    if (step === 6) {
+      return isAssessmentAnswersComplete(answers);
     }
 
     return true;
   }, [step, answers]);
 
   const submit = useCallback(() => {
+    if (!isAssessmentAnswersComplete(answers)) return;
     const res = evaluateAssessment(answers, jobs);
 
     saveStoredResult(res);
@@ -196,9 +174,7 @@ export function CareerAssessmentModal({
   const setRiasecChoice = (index: number, code: RiasecCode) => {
     setAnswers((a) => {
       const next = [...a.riasecScenarioChoices];
-
       next[index] = code;
-
       return { ...a, riasecScenarioChoices: next };
     });
   };
@@ -298,12 +274,13 @@ export function CareerAssessmentModal({
                     <OptionRow
                       options={AI_USAGE_OPTIONS}
                       value={String(answers.aiToolUsage)}
-                      onChange={(v) =>
+                      onChange={(v) => {
+                        const n = parseInt(v, 10);
                         setAnswers((a) => ({
                           ...a,
-                          aiToolUsage: parseInt(v, 10),
-                        }))
-                      }
+                          aiToolUsage: Number.isFinite(n) ? n : 0,
+                        }));
+                      }}
                     />
                   </StepBlock>
                 </>
@@ -318,7 +295,7 @@ export function CareerAssessmentModal({
               ) : null}
 
               {step === 5 && (
-                <StepBlock title="职业兴趣情境题（霍兰德 RIASEC，共 9 题）">
+                <StepBlock title="职业兴趣情境题（共 9 题）">
                   <p className="assessment-hint">
                     想象<strong>真实职场场景</strong>，选你更愿意投入的一项（无对错）。
                   </p>
@@ -364,19 +341,6 @@ export function CareerAssessmentModal({
                     ))}
                   </div>
 
-                  {riasecPreview.length === 3 ? (
-                    <p className="assessment-hint assessment-hint--preview">
-                      当前兴趣排序：
-                      {riasecPreview
-
-                        .map(
-                          (c) =>
-                            RIASEC_OPTIONS.find((r) => r.code === c)?.label,
-                        )
-
-                        .join(" → ")}
-                    </p>
-                  ) : null}
                 </StepBlock>
               )}
 
@@ -401,7 +365,7 @@ export function CareerAssessmentModal({
                     <li>任务：{answers.taskTags.length} 项已选</li>
 
                     <li>
-                      人格（MBTI 示意）：
+                      性格情境题：
                       {mbtiCompleteForDimensions(answers.mbtiVotes, [
                         "ei",
                         "sn",
@@ -413,16 +377,9 @@ export function CareerAssessmentModal({
                     </li>
 
                     <li>
-                      兴趣（RIASEC）：
-                      {riasecPreview.length === 3
-                        ? riasecPreview
-
-                            .map(
-                              (c) =>
-                                RIASEC_OPTIONS.find((r) => r.code === c)?.label,
-                            )
-
-                            .join("、")
+                      兴趣情境题：
+                      {riasecScenariosComplete(answers.riasecScenarioChoices)
+                        ? "已答完 9 题"
                         : "未完成"}
                     </li>
                   </ul>
@@ -475,7 +432,7 @@ export function CareerAssessmentModal({
 
                 setStep(0);
 
-                setAnswers(DEFAULT_ANSWERS);
+                setAnswers(createDefaultAnswers());
 
                 setResult(null);
               }}
@@ -535,54 +492,50 @@ function MbtiStepPanel({
   onVote: (index: number, letter: MbtiLetter) => void;
 }) {
   const stepIndex = group === MBTI_STEP_GROUPS[0] ? 1 : 2;
-  const questionCount = group.dimensions.length * 3;
+  const questions = MBTI_QUESTIONS.filter((q) =>
+    group.dimensions.includes(q.dimension),
+  );
 
   return (
-    <StepBlock title={`工作情境偏好 · ${group.title}（${stepIndex}/2，本步 ${questionCount} 题）`}>
+    <StepBlock title={`生活情境题 · ${group.title}（${stepIndex}/2，共 ${questions.length} 题）`}>
       <p className="assessment-hint">
-        都是身边可能发生的小事（扶人、敬酒、赶会、查 Wi‑Fi…），无标准答案，请按<strong>第一反应</strong>选。
+        都是身边可能发生的小事，无标准答案，请按<strong>第一反应</strong>二选一。
       </p>
-      <div className="assessment-mbti">
-        {group.dimensions.map((dim) => (
-          <div key={dim} className="assessment-mbti__group">
-            <p className="assessment-mbti__dim">
-              {MBTI_DIMENSION_LABEL[dim][0]} / {MBTI_DIMENSION_LABEL[dim][1]}
-            </p>
-            {MBTI_QUESTIONS.filter((q) => q.dimension === dim).map((q) => {
-              const i = MBTI_QUESTIONS.indexOf(q);
-              return (
-                <div key={q.id} className="assessment-mbti__item">
-                  {q.scene ? <p className="assessment-mbti__scene">{q.scene}</p> : null}
-                  <p className="assessment-mbti__q">{q.prompt}</p>
-                  <div className="assessment-mbti__opts">
-                    <button
-                      type="button"
-                      className={
-                        answers.mbtiVotes[i] === q.optionA.letter
-                          ? "assessment-opt assessment-opt--on"
-                          : "assessment-opt"
-                      }
-                      onClick={() => onVote(i, q.optionA.letter)}
-                    >
-                      {q.optionA.label}
-                    </button>
-                    <button
-                      type="button"
-                      className={
-                        answers.mbtiVotes[i] === q.optionB.letter
-                          ? "assessment-opt assessment-opt--on"
-                          : "assessment-opt"
-                      }
-                      onClick={() => onVote(i, q.optionB.letter)}
-                    >
-                      {q.optionB.label}
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ))}
+      <div className="assessment-mbti assessment-mbti--flat">
+        {questions.map((q) => {
+          const i = MBTI_QUESTIONS.indexOf(q);
+          const picked = answers.mbtiVotes[i];
+          return (
+            <div key={q.id} className="assessment-mbti__item">
+              {q.scene ? <p className="assessment-mbti__scene">{q.scene}</p> : null}
+              <p className="assessment-mbti__q">{q.prompt}</p>
+              <div className="assessment-mbti__opts">
+                <button
+                  type="button"
+                  className={
+                    picked === q.optionA.letter
+                      ? "assessment-opt assessment-opt--on"
+                      : "assessment-opt"
+                  }
+                  onClick={() => onVote(i, q.optionA.letter)}
+                >
+                  {q.optionA.label}
+                </button>
+                <button
+                  type="button"
+                  className={
+                    picked === q.optionB.letter
+                      ? "assessment-opt assessment-opt--on"
+                      : "assessment-opt"
+                  }
+                  onClick={() => onVote(i, q.optionB.letter)}
+                >
+                  {q.optionB.label}
+                </button>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </StepBlock>
   );

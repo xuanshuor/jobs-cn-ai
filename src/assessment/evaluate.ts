@@ -2,6 +2,7 @@ import type { JobOccupation } from "@/core/types";
 import { computeAiStaffingBreakdown } from "@/core/aiStaffing";
 import { LABOR_BALANCE_SCENARIO_YEAR } from "@/core/laborForce";
 import {
+  isAssessmentAnswersComplete,
   MBTI_DESCRIPTIONS,
   MBTI_QUESTIONS,
   type MbtiDimension,
@@ -403,6 +404,10 @@ export function evaluateAssessment(
   answers: AssessmentAnswers,
   jobs: JobOccupation[],
 ): AssessmentResult {
+  if (!isAssessmentAnswersComplete(answers)) {
+    throw new Error("测评尚未完成，请答完所有题目后再提交");
+  }
+
   const matches = findMatchingJobs(answers, jobs);
   const datasetAvg = weightedDatasetRisk(matches);
 
@@ -419,6 +424,9 @@ export function evaluateAssessment(
 
   const benchmark = matches[0]?.job;
   const mbti = resolveMbtiType(answers.mbtiVotes);
+  if (mbti.length !== 4) {
+    throw new Error("性格情境题作答不完整，无法生成类型");
+  }
   const riasecTop = resolveRiasecTop(answers.riasecScenarioChoices);
   const mbtiInfo = MBTI_DESCRIPTIONS[mbti] ?? {
     title: "综合型",
