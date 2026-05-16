@@ -25,6 +25,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate full job dataset (~206 occupations)
+        run: python scripts/generate_embodied_ai_dataset.py
+
       - uses: actions/setup-node@v5
         with:
           node-version: "24"

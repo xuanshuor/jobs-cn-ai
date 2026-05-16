@@ -7,6 +7,7 @@
     "dev": "vite",
     "dev:open": "vite --open",
     "build": "tsc -b && vite build",
+    "generate:data": "python scripts/generate_embodied_ai_dataset.py",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit"
   },
