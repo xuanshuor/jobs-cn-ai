@@ -379,7 +379,7 @@
       },
       "aiImpactUncertainty": {
         "p5": 3.6,
-        "p50": 3.7,
+        "p50": 3.8,
         "p95": 3.8
       },
       "substitutionMethodology": {
@@ -3751,7 +3751,7 @@
       "aiImpactUncertainty": {
         "p5": 0.7,
         "p50": 0.8,
-        "p95": 0.9
+        "p95": 0.8
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -4836,7 +4836,7 @@
       "aiImpactUncertainty": {
         "p5": 1.6,
         "p50": 1.7,
-        "p95": 1.8
+        "p95": 1.9
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -5831,7 +5831,7 @@
       "aiImpactUncertainty": {
         "p5": 0.7,
         "p50": 0.8,
-        "p95": 0.9
+        "p95": 0.8
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -6745,7 +6745,7 @@
       "aiImpactUncertainty": {
         "p5": 2.0,
         "p50": 2.1,
-        "p95": 2.3
+        "p95": 2.2
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -7960,7 +7960,7 @@
       },
       "aiImpactUncertainty": {
         "p5": 2.1,
-        "p50": 2.2,
+        "p50": 2.3,
         "p95": 2.4
       },
       "substitutionMethodology": {
@@ -8873,7 +8873,7 @@
       "aiImpactUncertainty": {
         "p5": 1.5,
         "p50": 1.7,
-        "p95": 1.7
+        "p95": 1.8
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -8949,7 +8949,7 @@
       "aiImpactUncertainty": {
         "p5": 1.7,
         "p50": 1.8,
-        "p95": 2.0
+        "p95": 1.9
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -10176,7 +10176,7 @@
       },
       "aiImpactUncertainty": {
         "p5": 2.0,
-        "p50": 2.1,
+        "p50": 2.2,
         "p95": 2.3
       },
       "substitutionMethodology": {
@@ -10479,7 +10479,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 0.3,
+        "p5": 0.2,
         "p50": 0.3,
         "p95": 0.3
       },
@@ -11948,7 +11948,7 @@
       "aiImpactUncertainty": {
         "p5": 2.1,
         "p50": 2.2,
-        "p95": 2.4
+        "p95": 2.3
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -12726,7 +12726,7 @@
       "aiImpactUncertainty": {
         "p5": 1.6,
         "p50": 1.7,
-        "p95": 1.8
+        "p95": 1.9
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -13114,7 +13114,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 2.1,
+        "p5": 2.2,
         "p50": 2.3,
         "p95": 2.4
       },
@@ -14192,7 +14192,7 @@
       "aiImpactUncertainty": {
         "p5": 2.0,
         "p50": 2.1,
-        "p95": 2.2
+        "p95": 2.3
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -14350,7 +14350,7 @@
       "aiImpactUncertainty": {
         "p5": 2.0,
         "p50": 2.1,
-        "p95": 2.3
+        "p95": 2.2
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
