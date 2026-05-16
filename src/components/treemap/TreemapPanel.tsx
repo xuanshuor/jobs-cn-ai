@@ -39,8 +39,10 @@ export function TreemapPanel({
     };
   }, []);
 
-  const layoutW = isMobile ? Math.max(size.w, 580) : size.w;
-  const layoutH = isMobile ? Math.max(size.h, Math.round(layoutW * 0.72)) : size.h;
+  const layoutW = isMobile ? Math.max(size.w, 520) : size.w;
+  const layoutH = isMobile
+    ? Math.max(size.h, Math.round(layoutW * 0.85))
+    : Math.max(size.h, 360);
 
   return (
     <div

@@ -150,6 +150,12 @@ a.link:hover {
   flex-direction: column;
 }
 
+@media (min-width: 961px) {
+  .app-main {
+    min-height: min(70vh, 880px);
+  }
+}
+
 .treemap-surface {
   flex: 1;
   min-height: 0;
@@ -168,6 +174,15 @@ a.link:hover {
 
 .job-treemap-cyber {
   touch-action: pan-x pan-y;
+}
+
+.job-treemap-cyber svg {
+  display: block;
+}
+
+.job-treemap-cyber svg text {
+  pointer-events: none;
+  user-select: none;
 }
 
 .treemap-surface--mobile {

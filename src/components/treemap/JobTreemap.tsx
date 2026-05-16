@@ -24,6 +24,7 @@ import {
 import { FONT_UI_STACK } from "@/config/typography";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { fitTileLabel } from "./tileLabelFit";
+import { TileSvgLabels } from "./TileSvgLabels";
 
 interface TreeNode {
   name: string;
@@ -93,6 +94,7 @@ interface TileLayout {
   displayTitle: string;
   padPx: number;
   centerContent: boolean;
+  charsPerLine: number;
 }
 
 function buildTileLayouts(nodes: TreemapNode[], mobile: boolean): TileLayout[] {
@@ -125,6 +127,7 @@ function buildTileLayouts(nodes: TreemapNode[], mobile: boolean): TileLayout[] {
       displayTitle: label.displayTitle,
       padPx: label.padPx,
       centerContent: label.centerContent,
+      charsPerLine: label.charsPerLine,
     });
     idx += 1;
   }
@@ -268,6 +271,7 @@ export function JobTreemap({
             displayTitle,
             padPx,
             centerContent,
+            charsPerLine,
           } = t;
           const hovered = activeId === job.id;
           const fillA = hovered ? 0.82 : 0.55;
@@ -324,98 +328,35 @@ export function JobTreemap({
                 strokeWidth={hovered ? 1.75 : 0.65}
                 filter={filterId}
               />
-              {showText ? (
+              {showText || showScoreLine ? (
                 <g clipPath={`url(#${clipId})`} pointerEvents="none">
-                  <foreignObject x={0} y={0} width={rw} height={rh}>
-                    <div
-                      {...({
-                        xmlns: "http://www.w3.org/1999/xhtml",
-                        style: {
-                          width: "100%",
-                          height: "100%",
-                          boxSizing: "border-box",
-                          padding: `${padPx}px`,
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: centerContent ? "center" : "flex-start",
-                          rowGap: "0.06em",
-                          overflow: "hidden",
-                          fontFamily: FONT_UI_STACK,
-                        },
-                      } as Record<string, unknown>)}
-                    >
-                      <div
-                        style={{
-                          flex: showScoreLine ? "1 1 0" : centerContent ? "0 0 auto" : "1 1 auto",
-                          minHeight: 0,
-                          fontSize: `${fontSize}px`,
-                          fontWeight: 100,
-                          lineHeight: 1.26,
-                          color: hovered ? "#ffffff" : "rgba(248,250,252,0.94)",
-                          overflow: "hidden",
-                          overflowWrap: "anywhere",
-                          wordBreak: "break-word",
-                          display: titleLines > 1 ? "-webkit-box" : "block",
-                          WebkitLineClamp: titleLines > 1 ? titleLines : undefined,
-                          WebkitBoxOrient: titleLines > 1 ? "vertical" : undefined,
-                          textAlign: centerContent ? "center" : "left",
-                        }}
-                      >
-                        {displayTitle || job.title}
-                      </div>
-                      {showScoreLine ? (
-                        <div
-                          style={{
-                            flexShrink: 0,
-                            fontSize: `${metaSize}px`,
-                            fontWeight: 100,
-                            lineHeight: 1.15,
-                            letterSpacing: "0.04em",
-                            fontFeatureSettings: '"tnum" 1',
-                            color: hovered ? "rgba(255,255,255,0.92)" : "rgba(226,236,255,0.78)",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {scoreText}
-                        </div>
-                      ) : null}
-                      {showEmpLine ? (
-                        <div
-                          style={{
-                            flexShrink: 0,
-                            fontSize: `${Math.max(6.5, metaSize * 0.92)}px`,
-                            fontWeight: 100,
-                            lineHeight: 1.12,
-                            color: "rgba(200,215,235,0.62)",
-                            overflowWrap: "anywhere",
-                            wordBreak: "break-word",
-                          }}
-                        >
-                          {empText}
-                        </div>
-                      ) : null}
-                      {hovered && showScoreLine && !clickOnly ? (
-                        <div
-                          style={{
-                            flexShrink: 0,
-                            fontSize: `${Math.max(6.5, metaSize * 0.9)}px`,
-                            fontWeight: 100,
-                            lineHeight: 1.12,
-                            color: "rgba(143, 212, 196, 0.88)",
-                            whiteSpace: "nowrap",
-                            fontFeatureSettings: '"tnum" 1',
-                          }}
-                        >
-                          AI∶人工{" "}
-                          {(
+                  <TileSvgLabels
+                    rh={rh}
+                    fit={{
+                      showText,
+                      showScoreLine,
+                      showEmpLine,
+                      fontSize,
+                      metaSize,
+                      titleLines,
+                      displayTitle,
+                      padPx,
+                      centerContent,
+                      charsPerLine,
+                    }}
+                    title={job.title}
+                    scoreText={scoreText}
+                    empText={empText}
+                    efficiencyText={
+                      hovered && showScoreLine && !clickOnly
+                        ? `AI∶人工 ${(
                             job.aiLaborStaffing?.[LABOR_BALANCE_SCENARIO_YEAR]?.productivityGap ??
                             aiHumanEfficiencyRatio(job, LABOR_BALANCE_SCENARIO_YEAR)
-                          ).toFixed(2)}{" "}
-                          倍
-                        </div>
-                      ) : null}
-                    </div>
-                  </foreignObject>
+                          ).toFixed(2)} 倍`
+                        : undefined
+                    }
+                    hovered={hovered}
+                  />
                 </g>
               ) : null}
             </g>
