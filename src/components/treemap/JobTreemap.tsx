@@ -8,10 +8,7 @@ import {
   formatAiHumanEfficiencyRatio,
 } from "@/core/aiStaffing";
 import { LABOR_BALANCE_SCENARIO_YEAR } from "@/core/laborForce";
-import {
-  GOLDEN_RATIO,
-  buildAestheticWeightMap,
-} from "@/core/treemapLayout";
+import { GOLDEN_RATIO } from "@/core/treemapLayout";
 import {
   type ImpactColorDomain,
   computeImpactColorDomain,
@@ -47,10 +44,7 @@ interface TreemapLayoutResult {
 const TILE_INSET = 0.55;
 const TILE_RX = 2;
 
-function buildTree(
-  jobs: JobOccupation[],
-  weightMap: Map<string, number>,
-): TreeNode {
+function buildTree(jobs: JobOccupation[]): TreeNode {
   const bySector = new Map<IndustrySector, JobOccupation[]>();
   for (const s of ["primary", "secondary", "tertiary"] as IndustrySector[]) {
     bySector.set(s, []);
@@ -67,7 +61,8 @@ function buildTree(
       children: sorted.map((j) => ({
         name: j.title,
         job: j,
-        layoutValue: weightMap.get(j.id) ?? 1,
+        // 块面积 ∝ 就业人数（万人），一条职业一块
+        layoutValue: Math.max(0.1, j.employment),
       })),
     });
   }
@@ -104,11 +99,12 @@ function buildTileLayouts(nodes: TreemapNode[], mobile: boolean): TileLayout[] {
     const job = d.data.job!;
     const w = d.x1 - d.x0;
     const rectH = d.y1 - d.y0;
-    if (w < 2 || rectH < 2) continue;
-    const g = mobile ? TILE_INSET * 0.85 : TILE_INSET;
+    if (w <= 0 || rectH <= 0) continue;
+    const tiny = w < 8 || rectH < 8;
+    const g = tiny ? 0 : mobile ? TILE_INSET * 0.85 : TILE_INSET;
     const rw = Math.max(0, w - 2 * g);
     const rh = Math.max(0, rectH - 2 * g);
-    if (rw < 1 || rh < 1) continue;
+    if (rw <= 0 || rh <= 0) continue;
     const label = fitTileLabel(job.title, rw, rh, mobile);
     const safe = job.id.replace(/[^a-zA-Z0-9_-]/g, "_");
     out.push({
@@ -162,12 +158,10 @@ export function JobTreemap({
     [jobs],
   );
 
-  const weightMap = useMemo(() => buildAestheticWeightMap(jobs), [jobs]);
-
   const layoutResult = useMemo((): TreemapLayoutResult => {
     if (width <= 0 || height <= 0) return { tiles: [] };
 
-    const rootData = buildTree(jobs, weightMap);
+    const rootData = buildTree(jobs);
     const h = hierarchy(rootData)
       .sum((d: TreeNode) => (d.layoutValue ?? 0) || 0)
       .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
@@ -183,7 +177,7 @@ export function JobTreemap({
     const treeRoot = layout(h) as TreemapNode;
     const nodes = treeRoot.descendants().filter((d) => d.data.job != null) as TreemapNode[];
     return { tiles: buildTileLayouts(nodes, mobile) };
-  }, [jobs, width, height, weightMap, mobile]);
+  }, [jobs, width, height, mobile]);
 
   const tileList = layoutResult.tiles;
 
@@ -372,7 +366,11 @@ export function JobTreemap({
           letterSpacing="0.06em"
           style={{ fontFamily: FONT_UI_STACK }}
           pointerEvents="none"
-        >{mobile ? "块面积·布局示意" : "块面积·斐波那契整数比（φ 分割）示意，非就业精确比"}</text>
+        >
+          {mobile
+            ? `共 ${jobs.length} 个职业 · 块面积≈就业（万人）`
+            : `共 ${jobs.length} 个职业 · 块面积≈就业人数（万人）· 颜色=综合替代压力`}
+        </text>
       </svg>
       {tip ? (
         <Tooltip
