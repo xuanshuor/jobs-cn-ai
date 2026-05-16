@@ -85,11 +85,9 @@ interface TileLayout {
   showEmpLine: boolean;
   fontSize: number;
   metaSize: number;
-  titleLines: number;
-  displayTitle: string;
+  titleLineTexts: string[];
   padPx: number;
   centerContent: boolean;
-  charsPerLine: number;
 }
 
 function buildTileLayouts(nodes: TreemapNode[], mobile: boolean): TileLayout[] {
@@ -119,11 +117,9 @@ function buildTileLayouts(nodes: TreemapNode[], mobile: boolean): TileLayout[] {
       showEmpLine: label.showEmpLine,
       fontSize: label.fontSize,
       metaSize: label.metaSize,
-      titleLines: label.titleLines,
-      displayTitle: label.displayTitle,
+      titleLineTexts: label.titleLineTexts,
       padPx: label.padPx,
       centerContent: label.centerContent,
-      charsPerLine: label.charsPerLine,
     });
     idx += 1;
   }
@@ -261,11 +257,9 @@ export function JobTreemap({
             showEmpLine,
             fontSize,
             metaSize,
-            titleLines,
-            displayTitle,
+            titleLineTexts,
             padPx,
             centerContent,
-            charsPerLine,
           } = t;
           const hovered = activeId === job.id;
           const fillA = hovered ? 0.82 : 0.55;
@@ -332,13 +326,10 @@ export function JobTreemap({
                       showEmpLine,
                       fontSize,
                       metaSize,
-                      titleLines,
-                      displayTitle,
+                      titleLineTexts,
                       padPx,
                       centerContent,
-                      charsPerLine,
                     }}
-                    title={job.title}
                     scoreText={scoreText}
                     empText={empText}
                     efficiencyText={
