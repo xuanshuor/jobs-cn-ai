@@ -127,6 +127,11 @@ class MergeBucket:
         else:
             title = rep["title"]
 
+        def wavg_prior(key: str) -> float:
+            if all(key in j for j in m):
+                return sum(j[key] * j["employment"] for j in m) / emp_total
+            return wavg("embodiedSubstitution" if key == "priorEmbodied" else "cognitiveAiSubstitution")
+
         return {
             "rep_id": rep["id"],
             "title": title,
@@ -135,8 +140,8 @@ class MergeBucket:
             "education": edu,
             "sector": sector,
             "industryLabel": ind,
-            "embodied_prior": round(wavg("embodiedSubstitution"), 1),
-            "cognitive_prior": round(wavg("cognitiveAiSubstitution"), 1),
+            "embodied_prior": round(wavg_prior("priorEmbodied"), 1),
+            "cognitive_prior": round(wavg_prior("priorCognitive"), 1),
             "positionTier": rep.get("positionTier"),
             "mergedFrom": merged_ids,
             "mergeNote": note,

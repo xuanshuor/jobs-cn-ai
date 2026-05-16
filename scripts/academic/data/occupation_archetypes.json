@@ -1,18 +1,44 @@
 {
-  "schemaVersion": 1,
-  "description": "职业原型→任务权重先验；职业层按职名/行业微调后归一化",
+  "schemaVersion": 2,
+  "description": "职业原型→任务权重；职名/行业关键词优先匹配，aiImpact=2030 replacedStaffRatio×10",
   "archetypes": {
     "primary_field": {
-      "label": "一产现场",
+      "label": "一产现场（默认）",
       "task_priors": {
-        "T_AGRI_FIELD": 0.32,
-        "T_FIELD_WORK": 0.18,
-        "T_MATERIAL_MOVE": 0.14,
+        "T_AGRI_FIELD": 0.28,
+        "T_MATERIAL_MOVE": 0.16,
+        "T_MACHINE_TEND": 0.14,
+        "T_FIELD_WORK": 0.14,
         "T_INSPECTION": 0.1,
-        "T_MACHINE_TEND": 0.08,
         "T_MAINTENANCE": 0.08,
-        "T_EXPERT_DECISION": 0.05,
-        "T_DATA_ENTRY": 0.05
+        "T_DATA_ENTRY": 0.06,
+        "T_EXPERT_DECISION": 0.04
+      },
+      "regulation_shift": 0.02
+    },
+    "primary_agri_manual": {
+      "label": "一产种植管护",
+      "task_priors": {
+        "T_AGRI_FIELD": 0.4,
+        "T_FIELD_WORK": 0.22,
+        "T_EXPERT_DECISION": 0.12,
+        "T_INSPECTION": 0.1,
+        "T_DATA_ENTRY": 0.08,
+        "T_MACHINE_TEND": 0.04,
+        "T_MATERIAL_MOVE": 0.04
+      },
+      "regulation_shift": 0.03
+    },
+    "primary_agri_auto": {
+      "label": "一产机械化/分拣",
+      "task_priors": {
+        "T_MACHINE_TEND": 0.24,
+        "T_MATERIAL_MOVE": 0.22,
+        "T_PICK_PLACE": 0.18,
+        "T_INSPECTION": 0.14,
+        "T_AGRI_FIELD": 0.1,
+        "T_DATA_ENTRY": 0.08,
+        "T_FIELD_WORK": 0.04
       },
       "regulation_shift": 0.02
     },
@@ -29,6 +55,19 @@
         "T_COMPLIANCE": 0.03
       },
       "regulation_shift": 0.04
+    },
+    "secondary_supervisor": {
+      "label": "二产班组长/管理",
+      "task_priors": {
+        "T_EXPERT_DECISION": 0.22,
+        "T_STAKEHOLDER": 0.18,
+        "T_MACHINE_TEND": 0.16,
+        "T_INSPECTION": 0.14,
+        "T_COMPLIANCE": 0.12,
+        "T_ANALYTICS": 0.1,
+        "T_DATA_ENTRY": 0.08
+      },
+      "regulation_shift": 0.08
     },
     "tertiary_office_low": {
       "label": "三产流程白领",
@@ -62,44 +101,70 @@
     "tertiary_service": {
       "label": "三产服务现场",
       "task_priors": {
-        "T_CUSTOMER_SCRIPT": 0.2,
-        "T_CARE_PHYSICAL": 0.18,
-        "T_MATERIAL_MOVE": 0.12,
+        "T_LOGISTICS_ROUTE": 0.18,
+        "T_CUSTOMER_SCRIPT": 0.16,
+        "T_CARE_PHYSICAL": 0.16,
+        "T_MATERIAL_MOVE": 0.14,
         "T_FIELD_WORK": 0.1,
-        "T_LOGISTICS_ROUTE": 0.1,
         "T_DATA_ENTRY": 0.08,
-        "T_TEACH_DELIVER": 0.08,
-        "T_STAKEHOLDER": 0.08,
-        "T_EXPERT_DECISION": 0.06
+        "T_STAKEHOLDER": 0.06,
+        "T_EXPERT_DECISION": 0.04
       },
-      "regulation_shift": 0.06
+      "regulation_shift": 0.05
+    },
+    "tertiary_craft_service": {
+      "label": "三产手艺/面对面服务",
+      "task_priors": {
+        "T_CARE_PHYSICAL": 0.34,
+        "T_FIELD_WORK": 0.2,
+        "T_CREATIVE_WORK": 0.14,
+        "T_CUSTOMER_SCRIPT": 0.12,
+        "T_STAKEHOLDER": 0.1,
+        "T_MATERIAL_MOVE": 0.06,
+        "T_DATA_ENTRY": 0.04
+      },
+      "regulation_shift": 0.07
+    },
+    "tertiary_psychosocial": {
+      "label": "心理/社工/热线",
+      "task_priors": {
+        "T_STAKEHOLDER": 0.3,
+        "T_CARE_PHYSICAL": 0.24,
+        "T_EXPERT_DECISION": 0.14,
+        "T_COMPLIANCE": 0.12,
+        "T_CUSTOMER_SCRIPT": 0.1,
+        "T_DOC_PROCESS": 0.06,
+        "T_DATA_ENTRY": 0.04
+      },
+      "regulation_shift": 0.16
     },
     "tertiary_health": {
       "label": "医疗卫生",
       "task_priors": {
-        "T_MEDICAL_PROC": 0.32,
-        "T_CARE_PHYSICAL": 0.22,
-        "T_COMPLIANCE": 0.14,
-        "T_EXPERT_DECISION": 0.12,
-        "T_DATA_ENTRY": 0.08,
-        "T_STAKEHOLDER": 0.06,
-        "T_DOC_PROCESS": 0.06
+        "T_MEDICAL_PROC": 0.22,
+        "T_CARE_PHYSICAL": 0.18,
+        "T_DOC_PROCESS": 0.12,
+        "T_COMPLIANCE": 0.12,
+        "T_EXPERT_DECISION": 0.1,
+        "T_DATA_ENTRY": 0.1,
+        "T_ANALYTICS": 0.1,
+        "T_STAKEHOLDER": 0.06
       },
-      "regulation_shift": 0.22
+      "regulation_shift": 0.18
     },
     "tertiary_education": {
       "label": "教育",
       "task_priors": {
-        "T_TEACH_DELIVER": 0.38,
-        "T_CREATIVE_WORK": 0.12,
+        "T_TEACH_DELIVER": 0.3,
+        "T_DOC_PROCESS": 0.16,
         "T_STAKEHOLDER": 0.12,
-        "T_DOC_PROCESS": 0.1,
+        "T_CREATIVE_WORK": 0.1,
         "T_EXPERT_DECISION": 0.1,
         "T_DATA_ENTRY": 0.08,
-        "T_ANALYTICS": 0.06,
-        "T_COMPLIANCE": 0.04
+        "T_ANALYTICS": 0.08,
+        "T_COMPLIANCE": 0.06
       },
-      "regulation_shift": 0.08
+      "regulation_shift": 0.12
     },
     "tertiary_tech": {
       "label": "信息技术",
@@ -131,6 +196,45 @@
         "T_STAKEHOLDER": 0.04
       },
       "regulation_shift": 0.2
+    },
+    "tertiary_trading": {
+      "label": "交易/量化/清算",
+      "task_priors": {
+        "T_TRADING_OPS": 0.34,
+        "T_ANALYTICS": 0.2,
+        "T_COMPLIANCE": 0.14,
+        "T_DATA_ENTRY": 0.1,
+        "T_EXPERT_DECISION": 0.08,
+        "T_DOC_PROCESS": 0.08,
+        "T_STAKEHOLDER": 0.06
+      },
+      "regulation_shift": 0.22
+    },
+    "tertiary_maintenance": {
+      "label": "设备维修/维保",
+      "task_priors": {
+        "T_MAINTENANCE": 0.36,
+        "T_MACHINE_TEND": 0.18,
+        "T_INSPECTION": 0.14,
+        "T_EXPERT_DECISION": 0.12,
+        "T_FIELD_WORK": 0.1,
+        "T_DATA_ENTRY": 0.06,
+        "T_COMPLIANCE": 0.04
+      },
+      "regulation_shift": 0.08
+    },
+    "tertiary_public_regulated": {
+      "label": "强监管公共事务",
+      "task_priors": {
+        "T_COMPLIANCE": 0.22,
+        "T_EXPERT_DECISION": 0.2,
+        "T_STAKEHOLDER": 0.16,
+        "T_DOC_PROCESS": 0.14,
+        "T_DATA_ENTRY": 0.12,
+        "T_ANALYTICS": 0.1,
+        "T_CUSTOMER_SCRIPT": 0.06
+      },
+      "regulation_shift": 0.25
     }
   },
   "sector_default": {
@@ -139,21 +243,43 @@
     "tertiary": "tertiary_office_low"
   },
   "tier_overrides": {
-    "低端": { "boost": ["T_DATA_ENTRY", "T_PICK_PLACE", "T_CUSTOMER_SCRIPT", "T_MATERIAL_MOVE"], "dampen": ["T_EXPERT_DECISION", "T_STAKEHOLDER"], "amount": 0.08 },
-    "高端": { "boost": ["T_EXPERT_DECISION", "T_STAKEHOLDER", "T_COMPLIANCE"], "dampen": ["T_DATA_ENTRY", "T_PICK_PLACE"], "amount": 0.1 },
+    "低端": {
+      "boost": ["T_DATA_ENTRY", "T_PICK_PLACE", "T_CUSTOMER_SCRIPT", "T_MATERIAL_MOVE"],
+      "dampen": ["T_EXPERT_DECISION", "T_STAKEHOLDER"],
+      "amount": 0.08
+    },
+    "高端": {
+      "boost": ["T_EXPERT_DECISION", "T_STAKEHOLDER", "T_COMPLIANCE"],
+      "dampen": ["T_DATA_ENTRY", "T_PICK_PLACE"],
+      "amount": 0.1
+    },
     "中端": { "boost": ["T_ANALYTICS", "T_MACHINE_TEND"], "dampen": [], "amount": 0.04 }
   },
   "title_keyword_overrides": [
-    { "keywords": ["会计", "审计", "财务", "出纳", "记账"], "boost": ["T_DATA_ENTRY", "T_DOC_PROCESS", "T_COMPLIANCE", "T_ANALYTICS"], "archetype": "tertiary_office_low" },
-    { "keywords": ["银行", "柜员", "证券", "保险", "基金", "期货", "信托", "信贷", "风控", "信审", "反洗钱", "理赔", "核保", "定损", "开户", "催收", "保理", "融资租赁", "典当", "小贷", "消费金融"], "boost": ["T_AML_KYC", "T_CREDIT_RISK", "T_DATA_ENTRY", "T_DOC_PROCESS", "T_TRADING_OPS"], "archetype": "tertiary_finance" },
-    { "keywords": ["投顾", "投行", "并购", "精算", "合伙人", "私人银行", "财富管理", "研究员"], "boost": ["T_WEALTH_ADVISORY", "T_EXPERT_DECISION", "T_STAKEHOLDER"], "archetype": "tertiary_finance" },
-    { "keywords": ["软件", "开发", "程序员", "架构", "运维", "数据"], "boost": ["T_CODE_DELIVERY", "T_ANALYTICS"], "archetype": "tertiary_tech" },
-    { "keywords": ["护士", "医师", "医生", "护理", "药师"], "boost": ["T_MEDICAL_PROC", "T_CARE_PHYSICAL"], "archetype": "tertiary_health" },
-    { "keywords": ["教师", "教练", "助教", "幼教"], "boost": ["T_TEACH_DELIVER"], "archetype": "tertiary_education" },
-    { "keywords": ["律师", "法务", "法官"], "boost": ["T_COMPLIANCE", "T_EXPERT_DECISION"], "archetype": "tertiary_office_high" },
-    { "keywords": ["焊接", "装配", "冲压", "数控", "普工", "操作工"], "boost": ["T_PICK_PLACE", "T_MACHINE_TEND"], "archetype": "secondary_line" },
-    { "keywords": ["司机", "配送", "快递", "货运"], "boost": ["T_LOGISTICS_ROUTE", "T_MATERIAL_MOVE"], "archetype": "tertiary_service" },
-    { "keywords": ["保洁", "保安", "家政", "服务员"], "boost": ["T_FIELD_WORK", "T_MATERIAL_MOVE"], "archetype": "tertiary_service" }
+    { "keywords": ["交易员", "操盘", "做市", "量化交易", "程序化交易", "自营", "经纪", "清算员", "交易执行"], "archetype": "tertiary_trading", "boost": ["T_TRADING_OPS", "T_ANALYTICS"] },
+    { "keywords": ["放射", "医学影像", "CT", "MRI", "超声诊断"], "archetype": "tertiary_health", "boost": ["T_ANALYTICS", "T_DATA_ENTRY"] },
+    { "keywords": ["心理", "社工", "EAP", "心理咨询", "心理治疗"], "archetype": "tertiary_psychosocial" },
+    { "keywords": ["美容", "美发", "理发", "美甲", "宠物美容", "化妆师"], "archetype": "tertiary_craft_service" },
+    { "keywords": ["厨师", "中餐", "西餐", "烘焙", "面点", "调酒"], "archetype": "tertiary_craft_service" },
+    { "keywords": ["导游", "讲解", "伴游"], "archetype": "tertiary_craft_service" },
+    { "keywords": ["维修", "维保", "机修", "检修", "运维技师", "电梯维保", "家电维修", "手机维修"], "archetype": "tertiary_maintenance" },
+    { "keywords": ["班组长", "领班", "工长", "站长"], "archetype": "secondary_supervisor" },
+    { "keywords": ["仲裁", "公证", "法官", "检察官", "行政复议"], "archetype": "tertiary_public_regulated" },
+    { "keywords": ["种植", "粮", "渔", "林", "管护", "养殖", "农技"], "archetype": "primary_agri_manual" },
+    { "keywords": ["农机", "分拣", "无人机", "包装工", "采摘", "植保飞防"], "archetype": "primary_agri_auto" },
+    { "keywords": ["柜员", "开户引导", "大堂引导", "现金"], "archetype": "tertiary_finance", "boost": ["T_DATA_ENTRY", "T_CUSTOMER_SCRIPT", "T_DOC_PROCESS"] },
+    { "keywords": ["投顾", "投行", "并购", "精算", "合伙人", "私人银行", "财富管理", "研究员"], "archetype": "tertiary_finance", "boost": ["T_WEALTH_ADVISORY", "T_EXPERT_DECISION", "T_STAKEHOLDER"] },
+    { "keywords": ["会计", "审计", "财务", "出纳", "记账"], "archetype": "tertiary_finance", "boost": ["T_DATA_ENTRY", "T_DOC_PROCESS", "T_COMPLIANCE", "T_ANALYTICS"] },
+    { "keywords": ["银行", "证券", "保险", "基金", "期货", "信托", "信贷", "风控", "信审", "反洗钱", "理赔", "核保", "定损", "催收", "保理", "融资租赁", "典当", "小贷", "消费金融"], "archetype": "tertiary_finance", "boost": ["T_AML_KYC", "T_CREDIT_RISK", "T_DATA_ENTRY", "T_DOC_PROCESS"] },
+    { "keywords": ["软件", "开发", "程序员", "架构", "运维", "数据"], "archetype": "tertiary_tech", "boost": ["T_CODE_DELIVERY", "T_ANALYTICS"] },
+    { "keywords": ["护士", "医师", "医生", "护理", "药师", "医疗"], "archetype": "tertiary_health", "boost": ["T_MEDICAL_PROC", "T_CARE_PHYSICAL"] },
+    { "keywords": ["教师", "教练", "助教", "幼教"], "archetype": "tertiary_education", "boost": ["T_TEACH_DELIVER"] },
+    { "keywords": ["律师", "法务", "法官"], "archetype": "tertiary_office_high", "boost": ["T_COMPLIANCE", "T_EXPERT_DECISION"] },
+    { "keywords": ["焊接", "装配", "冲压", "数控", "普工", "操作工"], "archetype": "secondary_line", "boost": ["T_PICK_PLACE", "T_MACHINE_TEND"] },
+    { "keywords": ["司机", "配送", "快递", "货运", "分拣", "驿站", "末端"], "archetype": "tertiary_service", "boost": ["T_LOGISTICS_ROUTE", "T_MATERIAL_MOVE", "T_DATA_ENTRY"] },
+    { "keywords": ["保洁", "保安", "家政", "服务员"], "archetype": "tertiary_service", "boost": ["T_FIELD_WORK", "T_MATERIAL_MOVE"] },
+    { "keywords": ["翻译", "笔译", "口译", "标注", "RLHF", "语料"], "archetype": "tertiary_office_low", "boost": ["T_DATA_ENTRY", "T_DOC_PROCESS", "T_CODE_DELIVERY"] },
+    { "keywords": ["客服", "坐席", "热线", "话务"], "archetype": "tertiary_office_low", "boost": ["T_CUSTOMER_SCRIPT", "T_DATA_ENTRY"] }
   ],
   "industry_archetype_map": {
     "医疗卫生": "tertiary_health",
@@ -168,11 +294,20 @@
     "典当": "tertiary_finance",
     "消费金融": "tertiary_finance",
     "财务共享": "tertiary_finance",
+    "审计鉴证": "tertiary_finance",
     "法律服务": "tertiary_office_high",
     "电子制造": "secondary_line",
     "汽车制造": "secondary_line",
     "农林牧渔": "primary_field",
+    "智慧农业": "primary_agri_auto",
+    "设施农业": "primary_agri_auto",
+    "农产品加工": "primary_agri_auto",
     "餐饮": "tertiary_service",
-    "邮政快递": "tertiary_service"
+    "邮政快递": "tertiary_service",
+    "健康服务": "tertiary_psychosocial",
+    "公共服务": "tertiary_psychosocial",
+    "设备维护": "tertiary_maintenance",
+    "物业设施": "tertiary_maintenance",
+    "维修服务": "tertiary_maintenance"
   }
 }

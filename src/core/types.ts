@@ -19,9 +19,9 @@ export interface JobOccupation {
   education: string;
   outlook?: string;
   /**
-   * 0–10，综合替代压力。由 `embodiedSubstitution` 与 `cognitiveAiSubstitution` 经
-   * **随职业变化的权重**合成（产业基权 + 层级/学历微调 + 分项主导偏置 + 双高协同项），
-   * 非全局固定比例；实现见 `substitutionModel.ts` 中 `computeAiImpactFromScores`（与 `scripts/substitution_model.py` 同步）。
+   * 0–10，**2030 示意岗位替代率**：与 `aiLaborStaffing["2030"].replacedStaffRatio` 一致，
+   * 即「同等产出下可减少的人力占比」。例如 6/10 表示约 60% 岗位需求可由 AI/自动化承接。
+   * `embodiedSubstitution` / `cognitiveAiSubstitution` 仍为任务—能力模型的分项压力（0–10）。
    */
   aiImpact: number;
   /** 0–10，具身智能（人形/移动机器人、机械臂等）分项；JSON 中多为经 cost-mass-v1 校准后的示意值 */

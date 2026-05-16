@@ -51,7 +51,7 @@ def build_job(
         industry_label=ind,
         prior_embodied_10=e,
         prior_cognitive_10=c,
-        prior_blend=0.12,
+        prior_blend=0.05,
         monte_carlo_samples=MONTE_CARLO_DEFAULT_N,
         include_task_breakdown=False,
     )
@@ -64,6 +64,15 @@ def build_job(
         tier=tier,
         industry_label=ind,
     )
+
+    def _rate10(year: str) -> float:
+        row = staffing.get(year) or staffing.get("2030") or next(iter(staffing.values()))
+        return round(float(row["replacedStaffRatio"]) * 10.0, 1)
+
+    # 综合替代压力 = 2030 示意情景下「可替代人力占比」×10（6/10 ≈ 替代 60% 岗位需求）
+    impact_2030 = _rate10("2030")
+    timeline = {y: _rate10(y) for y in staffing}
+
     d: dict = {
         "id": jid,
         "title": title,
@@ -72,24 +81,27 @@ def build_job(
         "education": edu,
         "sector": sector,
         "industryLabel": ind,
+        "priorEmbodied": e,
+        "priorCognitive": c,
         "embodiedSubstitution": res.embodied_10,
         "cognitiveAiSubstitution": res.cognitive_10,
         "hybridSubstitution": res.hybrid_10,
-        "aiImpact": res.total_10,
+        "aiImpact": impact_2030,
         "substitutionShares": {
             "fullyAutomatable": res.shares.fully_automatable,
             "humanAiCollaboration": res.shares.human_ai_collaboration,
             "humanOnly": res.shares.human_only,
         },
-        "substitutionTimeline": res.timeline,
+        "substitutionTimeline": timeline,
         "substitutionArchetype": res.archetype,
         "aiLaborStaffing": staffing,
     }
     if res.uncertainty_p5 is not None and res.uncertainty_p95 is not None:
+        scale = impact_2030 / res.total_10 if res.total_10 > 0 else 1.0
         d["aiImpactUncertainty"] = {
-            "p5": res.uncertainty_p5,
-            "p50": res.uncertainty_p50,
-            "p95": res.uncertainty_p95,
+            "p5": round(res.uncertainty_p5 * scale, 1),
+            "p50": round((res.uncertainty_p50 or impact_2030) * scale, 1),
+            "p95": round(res.uncertainty_p95 * scale, 1),
         }
     if res.methodology:
         d["substitutionMethodology"] = res.methodology
@@ -144,12 +156,12 @@ ALT: dict[str, list[tuple]] = {
     ],
     "t16": [
         ("t16a", "教辅/合同制教师（大班课为主）", 108, 72000, "本科及以上", "tertiary", "教育", 2.0, 8.0, "低端"),
-        ("t16b", "公立中学学科教师（在编）", 398, 120000, "本科及以上", "tertiary", "教育", 2.2, 5.4, "中端"),
+        ("t16b", "公立中学学科教师（在编）", 398, 120000, "本科及以上", "tertiary", "教育", 2.5, 5.6, "中端"),
         ("t16c", "中学学科带头人/正高级教师", 34, 198000, "本科及以上", "tertiary", "教育", 1.6, 3.6, "高端"),
     ],
     "t20": [
-        ("t20a", "病区执行护士（给药/记录）", 288, 95000, "大专及以上", "tertiary", "医疗卫生", 4.2, 7.0, "低端"),
-        ("t20b", "ICU/手术室专科护士", 77, 152000, "大专及以上", "tertiary", "医疗卫生", 3.2, 5.2, "高端"),
+        ("t20a", "病区执行护士（给药/记录）", 288, 95000, "大专及以上", "tertiary", "医疗卫生", 4.5, 6.8, "低端"),
+        ("t20b", "ICU/手术室专科护士", 77, 152000, "大专及以上", "tertiary", "医疗卫生", 3.6, 5.6, "高端"),
     ],
     "t32": [
         ("t32a", "律所初级律师（文书与检索为主）", 35, 168000, "本科及以上", "tertiary", "法律服务", 1.0, 8.2, "低端"),
@@ -162,6 +174,11 @@ ALT: dict[str, list[tuple]] = {
     "t36": [
         ("t36a", "数据报表/取数分析师", 58, 168000, "本科及以上", "tertiary", "信息技术", 1.0, 9.2, "低端"),
         ("t36b", "决策科学/实验与因果分析", 20, 298000, "研究生", "tertiary", "信息技术", 0.8, 6.0, "高端"),
+    ],
+    "f01": [
+        ("f01a", "证券交易员（场内/执行）", 35, 168000, "本科及以上", "tertiary", "证券", 2.5, 7.8, "中端"),
+        ("f01b", "量化策略/程序化交易", 14, 298000, "研究生", "tertiary", "证券", 1.5, 8.8, "高端"),
+        ("f01c", "期货交易员", 22, 155000, "本科及以上", "tertiary", "期货", 2.8, 7.5, "中端"),
     ],
 }
 
@@ -214,9 +231,9 @@ BASE_ROWS: list[tuple[str, str, int, int, str, str, str, float, float]] = [
     ("t14", "笔译/口译员", 22, 96000, "本科及以上", "tertiary", "语言服务", 0.8, 9.6),
     ("t15", "新闻编辑", 42, 98000, "本科及以上", "tertiary", "传媒", 1.4, 8.6),
     ("t16", "中学教育（已拆分）", 0, 0, "本科及以上", "tertiary", "教育", 0.0, 0.0),
-    ("t17", "小学教师", 600, 105000, "本科及以上", "tertiary", "教育", 2.2, 5.2),
+    ("t17", "小学教师", 600, 105000, "本科及以上", "tertiary", "教育", 2.5, 5.8),
     ("t18", "幼教老师", 325, 62000, "大专及以上", "tertiary", "教育", 3.2, 4.8),
-    ("t19", "全科医生", 48, 185000, "本科及以上", "tertiary", "医疗卫生", 2.2, 6.2),
+    ("t19", "全科医生", 48, 185000, "本科及以上", "tertiary", "医疗卫生", 3.0, 6.5),
     ("t20", "护理（已拆分）", 0, 0, "大专及以上", "tertiary", "医疗卫生", 0.0, 0.0),
     ("t21", "放射科医师", 20, 220000, "研究生", "tertiary", "医疗卫生", 2.0, 7.6),
     ("t22", "药剂师", 42, 125000, "本科及以上", "tertiary", "医疗卫生", 2.6, 7.0),
@@ -236,6 +253,7 @@ BASE_ROWS: list[tuple[str, str, int, int, str, str, str, float, float]] = [
     ("t36", "数据分析（已拆分）", 0, 0, "本科及以上", "tertiary", "信息技术", 0.0, 0.0),
     ("t37", "客服中心坐席", 385, 68000, "大专", "tertiary", "客户服务", 0.8, 9.2),
     ("t38", "IT 运维工程师", 98, 165000, "本科及以上", "tertiary", "信息技术", 2.6, 7.4),
+    ("f01", "证券交易（已拆分）", 0, 0, "本科及以上", "tertiary", "证券", 0.0, 0.0),
     ("t39", "互联网产品经理", 88, 245000, "本科及以上", "tertiary", "信息技术", 1.4, 7.6),
     ("t40", "B2B 销售代表", 360, 115000, "大专及以上", "tertiary", "批发零售", 2.4, 6.6),
     ("t41", "房产经纪人", 125, 95000, "大专及以上", "tertiary", "房地产", 2.0, 7.0),
@@ -252,7 +270,7 @@ BASE_ROWS: list[tuple[str, str, int, int, str, str, str, float, float]] = [
     ("t52", "无人机巡检员（电力/管网）", 18, 112000, "大专及以上", "secondary", "能源公用", 4.8, 6.8),
     ("t53", "无人配送车远程监管员", 6, 105000, "大专及以上", "tertiary", "物流科技", 3.6, 7.4),
     ("t54", "人形机器人训练数据采集员", 4, 98000, "大专及以上", "tertiary", "人工智能", 4.2, 6.0),
-    ("t55", "外科医生", 38, 420000, "研究生", "tertiary", "医疗卫生", 2.6, 4.8),
+    ("t55", "外科医生", 38, 420000, "研究生", "tertiary", "医疗卫生", 3.2, 5.5),
 ]
 
 # 补充职业：把总量拉到约 250 条（与 madeye.github.io/jobs 量级一致；以下为示意生成）
@@ -598,6 +616,32 @@ def _parse_more_titles(raw: str) -> list[str]:
 _MORE_TITLE_LIST = _parse_more_titles(_MORE_TITLES)
 
 
+def _model_priors(
+    title: str,
+    sector: str,
+    ind: str,
+    edu: str,
+    emp: int,
+    sal: int,
+    tier: str | None = None,
+) -> tuple[float, float]:
+    """由任务—能力模型导出分项先验（与职名原型一致，非哈希随机）。"""
+    res = compute_occupation_substitution(
+        title=title,
+        sector=sector,
+        education=edu,
+        employment=emp,
+        salary_median=sal,
+        tier=tier,
+        industry_label=ind,
+        prior_embodied_10=None,
+        prior_cognitive_10=None,
+        prior_blend=0.0,
+        monte_carlo_samples=0,
+    )
+    return res.embodied_10, res.cognitive_10
+
+
 def _supplement_rows() -> list[tuple[str, str, int, int, str, str, str, float, float]]:
     out: list[tuple[str, str, int, int, str, str, str, float, float]] = []
     for i, title in enumerate(_MORE_TITLE_LIST):
@@ -605,16 +649,17 @@ def _supplement_rows() -> list[tuple[str, str, int, int, str, str, str, float, f
             continue
         title = title.strip()
         sector, ind = classify_job(title)
-        # 确定性“伪随机”：避免每次生成完全飘移，但不必与真实统计对齐
         h = sum(ord(c) for c in title) + i * 17
         emp = 5 + (h % 120)
         sal = 45000 + (h % 140) * 900
-        e = round(2.0 + (h % 55) / 12.0, 1)
-        c = round(2.0 + (h % 60) / 11.0, 1)
         edu_choices = ("初中及以上", "中专/高中", "大专", "本科及以上", "研究生")
         edu = edu_choices[h % 5]
-        e = min(10.0, e)
-        c = min(10.0, c)
+        tier = None
+        if any(k in title for k in ("总监", "合伙人", "首席", "资深", "专家", "架构")):
+            tier = "高端"
+        elif any(k in title for k in ("助理", "新人", "实习", "普工", "操作", "分拣", "录入")):
+            tier = "低端"
+        e, c = _model_priors(title, sector, ind, edu, emp, sal, tier)
         out.append((f"z{i:04d}", title, emp, sal, edu, sector, ind, e, c))
     return out
 
@@ -653,7 +698,7 @@ def main() -> None:
         "schemaVersion": 1,
         "meta": {
             "title": "中国就业市场：具身智能与 AI 替代压力分析",
-            "subtitle": f"约 {n} 个代表性职业 · 面积 = 就业人数（万人）· 颜色 = 综合替代压力（0–10）",
+            "subtitle": f"约 {n} 个代表性职业 · 面积 = 就业人数（万人）· 颜色 = 2030 示意岗位替代率（0–10，如 6/10≈替代 60%）",
             "employmentUnit": "10k",
             "generatedAt": date.today().isoformat(),
             "aiImpactModel": AI_IMPACT_MODEL_ID,
@@ -661,8 +706,8 @@ def main() -> None:
             "taskSubstitutionModel": TASK_SUBSTITUTION_MODEL_ID,
             "substitutionFramework": "occupation-task-capability-frontier-academic",
             "monteCarloSamples": MONTE_CARLO_DEFAULT_N,
-            "sourceNote": "学术级 task-capability-academic-v2：职业→任务库→能力前沿→Sigmoid×ROI；"
-            f"蒙特卡洛 N={MONTE_CARLO_DEFAULT_N}；已合并高度重合岗位（{before_merge}→{n}）。非官方统计。",
+            "sourceNote": "task-capability-academic-v2：aiImpact=2030年可替代人力占比×10（6/10≈60%）；"
+            f"职业原型 v2 + 人力模型；蒙特卡洛 N={MONTE_CARLO_DEFAULT_N}；合并 {before_merge}→{n} 条。非官方统计。",
         },
         "jobs": jobs,
     }

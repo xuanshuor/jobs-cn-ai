@@ -1,0 +1,315 @@
+{
+  "jobCount": 206,
+  "aligned": true,
+  "stats": {
+    "min": 0.3,
+    "max": 4.3,
+    "median": 2.2
+  },
+  "tierChecks": [
+    {
+      "group": "电子制造",
+      "lowTitle": "电子装配普工",
+      "lowPct": 43,
+      "highTitle": "电子制造工艺/良率工程师",
+      "highPct": 24,
+      "ok": true
+    },
+    {
+      "group": "质检",
+      "lowTitle": "产线质检员（目检）",
+      "lowPct": 41,
+      "highTitle": "质量工程师（SPC/失效分析）",
+      "highPct": 24,
+      "ok": true
+    },
+    {
+      "group": "银行",
+      "lowTitle": "银行柜员（现金与柜面操作）",
+      "lowPct": 17,
+      "highTitle": "私人银行顾问/综合投顾",
+      "highPct": 5,
+      "ok": true
+    },
+    {
+      "group": "财会",
+      "lowTitle": "财会共享中心（记账/费用审核）",
+      "lowPct": 17,
+      "highTitle": "财务分析/FP&A",
+      "highPct": 10,
+      "ok": true
+    },
+    {
+      "group": "营销",
+      "lowTitle": "市场营销执行文案（投放素材）",
+      "lowPct": 30,
+      "highTitle": "品牌策略/创意总监",
+      "highPct": 13,
+      "ok": true
+    },
+    {
+      "group": "设计",
+      "lowTitle": "电商视觉套版/模板美工",
+      "lowPct": 29,
+      "highTitle": "品牌视觉/体验设计负责人",
+      "highPct": 14,
+      "ok": true
+    },
+    {
+      "group": "教师",
+      "lowTitle": "教辅/合同制教师（大班课为主）",
+      "lowPct": 11,
+      "highTitle": "中学学科带头人/正高级教师",
+      "highPct": 4,
+      "ok": true
+    },
+    {
+      "group": "护理",
+      "lowTitle": "病区执行护士（给药/记录）",
+      "lowPct": 7,
+      "highTitle": "ICU/手术室专科护士",
+      "highPct": 3,
+      "ok": true
+    },
+    {
+      "group": "律师",
+      "lowTitle": "律所初级律师（文书与检索为主）",
+      "lowPct": 11,
+      "highTitle": "出庭资深律师/合伙人",
+      "highPct": 4,
+      "ok": true
+    },
+    {
+      "group": "软件开发",
+      "lowTitle": "初/中级软件开发（业务实现/Copilot）",
+      "lowPct": 26,
+      "highTitle": "资深架构/安全/基础设施专家",
+      "highPct": 14,
+      "ok": true
+    },
+    {
+      "group": "数据分析",
+      "lowTitle": "数据报表/取数分析师",
+      "lowPct": 26,
+      "highTitle": "决策科学/实验与因果分析",
+      "highPct": 13,
+      "ok": true
+    },
+    {
+      "group": "证券交易",
+      "lowTitle": "证券交易员（场内/执行）",
+      "lowPct": 12,
+      "highTitle": "量化策略/程序化交易",
+      "highPct": 8,
+      "ok": true
+    }
+  ],
+  "sectorSpread": {
+    "primary": {
+      "n": 7,
+      "min": 1.6,
+      "max": 3.8,
+      "median": 2.2
+    },
+    "secondary": {
+      "n": 40,
+      "min": 1.4,
+      "max": 4.3,
+      "median": 3.2
+    },
+    "tertiary": {
+      "n": 159,
+      "min": 0.3,
+      "max": 3.5,
+      "median": 2.0
+    }
+  },
+  "samples": {
+    "topAutomation": [
+      {
+        "title": "电子装配普工",
+        "pct": 43,
+        "id": "s01a"
+      },
+      {
+        "title": "产线质检员（目检）",
+        "pct": 41,
+        "id": "s05a"
+      },
+      {
+        "title": "农机驾驶员",
+        "pct": 38,
+        "id": "p05"
+      },
+      {
+        "title": "设施农业技工",
+        "pct": 38,
+        "id": "p07"
+      },
+      {
+        "title": "冲压/注塑操作工",
+        "pct": 36,
+        "id": "s03"
+      },
+      {
+        "title": "农业无人机操作员",
+        "pct": 35,
+        "id": "p06"
+      },
+      {
+        "title": "焊接工",
+        "pct": 35,
+        "id": "s02"
+      },
+      {
+        "title": "搬运装卸工",
+        "pct": 35,
+        "id": "s07"
+      },
+      {
+        "title": "建筑钢筋工",
+        "pct": 35,
+        "id": "s11"
+      },
+      {
+        "title": "建筑泥瓦工",
+        "pct": 35,
+        "id": "s12"
+      },
+      {
+        "title": "印刷/包装产线",
+        "pct": 35,
+        "id": "s15"
+      },
+      {
+        "title": "服装缝纫工",
+        "pct": 35,
+        "id": "s16"
+      }
+    ],
+    "lowAutomation": [
+      {
+        "title": "私人银行顾问/综合投顾",
+        "pct": 5,
+        "id": "t07b"
+      },
+      {
+        "title": "导游",
+        "pct": 5,
+        "id": "t42"
+      },
+      {
+        "title": "调酒师",
+        "pct": 5,
+        "id": "z0001"
+      },
+      {
+        "title": "眼镜验光配镜助理",
+        "pct": 5,
+        "id": "z0060"
+      },
+      {
+        "title": "中学学科带头人/正高级教师",
+        "pct": 4,
+        "id": "t16c"
+      },
+      {
+        "title": "药剂师",
+        "pct": 4,
+        "id": "t22"
+      },
+      {
+        "title": "康复治疗师",
+        "pct": 4,
+        "id": "t23"
+      },
+      {
+        "title": "养老护理员",
+        "pct": 4,
+        "id": "t31"
+      },
+      {
+        "title": "出庭资深律师/合伙人",
+        "pct": 4,
+        "id": "t32b"
+      },
+      {
+        "title": "心理咨询师",
+        "pct": 4,
+        "id": "t33"
+      },
+      {
+        "title": "社工",
+        "pct": 4,
+        "id": "t34"
+      },
+      {
+        "title": "临床护工（医院陪护）",
+        "pct": 4,
+        "id": "t46"
+      }
+    ],
+    "finance": [
+      {
+        "title": "银行柜员（现金与柜面操作）",
+        "pct": 17,
+        "id": "t07a"
+      },
+      {
+        "title": "财会共享中心（记账/费用审核）",
+        "pct": 17,
+        "id": "t08a"
+      },
+      {
+        "title": "证券开户引导员",
+        "pct": 14,
+        "id": "z0062"
+      },
+      {
+        "title": "证券交易员（场内/执行）",
+        "pct": 12,
+        "id": "f01a"
+      },
+      {
+        "title": "期货交易员",
+        "pct": 12,
+        "id": "f01c"
+      },
+      {
+        "title": "典当业务/鉴定（助理·业务员）",
+        "pct": 12,
+        "id": "z0063"
+      },
+      {
+        "title": "融资租赁/保理/供应链金融（助理）",
+        "pct": 12,
+        "id": "z0067"
+      },
+      {
+        "title": "保险代理人（新人）",
+        "pct": 11,
+        "id": "z0061"
+      },
+      {
+        "title": "法务催收合规专员",
+        "pct": 11,
+        "id": "z0124"
+      },
+      {
+        "title": "财务分析/FP&A",
+        "pct": 10,
+        "id": "t08b"
+      },
+      {
+        "title": "量化策略/程序化交易",
+        "pct": 8,
+        "id": "f01b"
+      },
+      {
+        "title": "税务大厅导税员",
+        "pct": 8,
+        "id": "z0023"
+      }
+    ]
+  }
+}

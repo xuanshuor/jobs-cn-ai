@@ -190,7 +190,10 @@ def compute_academic_substitution(
         b = max(0.0, min(1.0, prior_blend))
         e10 = round((1 - b) * e10 + b * prior_embodied_10, 1)
         c10 = round((1 - b) * c10 + b * prior_cognitive_10, 1)
-        t10 = round(min(10.0, (e10 + c10) / 2.0 + synergy * 10.0), 1)
+        h10 = round((1 - b) * h10 + b * (prior_embodied_10 + prior_cognitive_10) / 2.0, 1)
+        prior_syn = 0.1 * math.sqrt(max(0.0, prior_embodied_10 * prior_cognitive_10) / 10.0)
+        prior_t10 = min(10.0, (prior_embodied_10 + prior_cognitive_10) / 2.0 + prior_syn * 10.0)
+        t10 = round(min(10.0, (1 - b) * t10 + b * prior_t10), 1)
 
     timeline: dict[str, float] = {}
     for y in (2025, 2030, 2035, 2040):

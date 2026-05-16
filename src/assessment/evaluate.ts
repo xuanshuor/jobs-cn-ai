@@ -439,7 +439,7 @@ export function evaluateAssessment(
   if (level === "高") {
     replacementSummary = `对照本库 ${matches.length} 个相近样本，您描述的任务结构与「${benchmark?.title ?? "相近岗位"}」等岗位相似，2030 示意情景下可替代人力占比较高；建议向监管、现场运维或 AI 协同管理方向延伸技能。`;
   } else if (level === "中") {
-    replacementSummary = `您的任务组合处于人机分工重塑期：认知类事务更易被 AI 承接，但专业判断、现场服务或强监管环节仍依赖人工。样本参照「${benchmark?.title ?? "相近岗位"}」（综合压力 ${benchmark?.aiImpact.toFixed(1)}/10）。`;
+    replacementSummary = `您的任务组合处于人机分工重塑期：认知类事务更易被 AI 承接，但专业判断、现场服务或强监管环节仍依赖人工。样本参照「${benchmark?.title ?? "相近岗位"}」（2030 示意替代率约 ${Math.round((benchmark?.aiImpact ?? 5) * 10)}%）。`;
   } else {
     replacementSummary = `综合岗位类别、学历与任务结构，整体替代压力偏低，AI 更像增效工具；仍建议关注流程自动化对辅助性事务的渗透。主要参照样本「${benchmark?.title ?? "相近岗位"}」。`;
   }

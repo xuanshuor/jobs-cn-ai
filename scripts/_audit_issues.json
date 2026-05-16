@@ -1,0 +1,359 @@
+{
+  "heuristic": [
+    {
+      "flag": "偏高",
+      "impact": 8.3,
+      "range": [
+        4.5,
+        7.5
+      ],
+      "id": "s09",
+      "title": "设备维修技师",
+      "rule": "设备维修",
+      "reason": "故障诊断AI化、动手仍要人"
+    },
+    {
+      "flag": "偏低",
+      "impact": 6.4,
+      "range": [
+        6.5,
+        10.0
+      ],
+      "id": "t07a",
+      "title": "银行柜员（现金与柜面操作）",
+      "rule": "流程白领低端",
+      "reason": "规则明确、数字化程度高"
+    },
+    {
+      "flag": "偏高",
+      "impact": 7.4,
+      "range": [
+        3.5,
+        6.5
+      ],
+      "id": "t24",
+      "title": "美容美发师",
+      "rule": "美容美发",
+      "reason": "强现场服务属性"
+    },
+    {
+      "flag": "偏高",
+      "impact": 7.1,
+      "range": [
+        2.5,
+        5.5
+      ],
+      "id": "t33",
+      "title": "心理咨询师",
+      "rule": "社工心理",
+      "reason": "人际信任与伦理约束"
+    },
+    {
+      "flag": "偏高",
+      "impact": 7.2,
+      "range": [
+        2.5,
+        5.5
+      ],
+      "id": "t34",
+      "title": "社工",
+      "rule": "社工心理",
+      "reason": "人际信任与伦理约束"
+    },
+    {
+      "flag": "偏高",
+      "impact": 7.6,
+      "range": [
+        3.5,
+        6.5
+      ],
+      "id": "z0007",
+      "title": "宠物美容师",
+      "rule": "美容美发",
+      "reason": "强现场服务属性"
+    },
+    {
+      "flag": "偏高",
+      "impact": 5.5,
+      "range": [
+        1.5,
+        4.5
+      ],
+      "id": "z0022",
+      "title": "劳动仲裁窗口文员",
+      "rule": "强监管专业",
+      "reason": "责任与执照门槛高"
+    },
+    {
+      "flag": "偏高",
+      "impact": 7.6,
+      "range": [
+        4.5,
+        7.5
+      ],
+      "id": "z0031",
+      "title": "电梯维保辅助工",
+      "rule": "设备维修",
+      "reason": "故障诊断AI化、动手仍要人"
+    },
+    {
+      "flag": "偏高",
+      "impact": 7.3,
+      "range": [
+        2.5,
+        5.5
+      ],
+      "id": "z0136",
+      "title": "EAP 热线接听员",
+      "rule": "社工心理",
+      "reason": "人际信任与伦理约束"
+    }
+  ],
+  "primarySpread": {
+    "count": 8,
+    "min": 7.1,
+    "max": 7.8,
+    "jobs": [
+      {
+        "id": "z0153",
+        "title": "农产品直播助播",
+        "aiImpact": 7.1
+      },
+      {
+        "id": "p03",
+        "title": "渔业生产人员",
+        "aiImpact": 7.4
+      },
+      {
+        "id": "p04",
+        "title": "林业管护员",
+        "aiImpact": 7.4
+      },
+      {
+        "id": "p06",
+        "title": "农业无人机操作员",
+        "aiImpact": 7.5
+      },
+      {
+        "id": "p01",
+        "title": "粮食作物种植户",
+        "aiImpact": 7.7
+      },
+      {
+        "id": "p05",
+        "title": "农机驾驶员",
+        "aiImpact": 7.7
+      },
+      {
+        "id": "p02",
+        "title": "畜禽养殖工",
+        "aiImpact": 7.8
+      },
+      {
+        "id": "p07",
+        "title": "设施农业技工",
+        "aiImpact": 7.8
+      }
+    ]
+  },
+  "supplementHigh": [
+    {
+      "id": "z0084",
+      "title": "工业机器人示教操作员",
+      "aiImpact": 8.3,
+      "industry": "智能制造"
+    },
+    {
+      "id": "z0080",
+      "title": "光伏安装工",
+      "aiImpact": 8.2,
+      "industry": "能源公用"
+    },
+    {
+      "id": "z0091",
+      "title": "锂电池化成分容操作员",
+      "aiImpact": 8.2,
+      "industry": "半导体"
+    },
+    {
+      "id": "z0105",
+      "title": "自来水厂运行工",
+      "aiImpact": 8.2,
+      "industry": "能源公用"
+    },
+    {
+      "id": "z0075",
+      "title": "钢结构无损检测辅助",
+      "aiImpact": 8.1,
+      "industry": "建筑业"
+    },
+    {
+      "id": "z0085",
+      "title": "AGV 调度监控员",
+      "aiImpact": 8.1,
+      "industry": "智能制造"
+    },
+    {
+      "id": "z0088",
+      "title": "半导体封装/检测产线",
+      "aiImpact": 8.1,
+      "industry": "半导体"
+    },
+    {
+      "id": "z0029",
+      "title": "弱电智能化施工员",
+      "aiImpact": 8.0,
+      "industry": "建筑业"
+    },
+    {
+      "id": "z0106",
+      "title": "污水处理厂操作工",
+      "aiImpact": 8.0,
+      "industry": "能源公用"
+    },
+    {
+      "id": "z0108",
+      "title": "热力站运行工",
+      "aiImpact": 8.0,
+      "industry": "能源公用"
+    }
+  ],
+  "supplementLow": [
+    {
+      "id": "z0053",
+      "title": "口腔诊所护士助理",
+      "aiImpact": 3.0,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "z0055",
+      "title": "体检中心导检",
+      "aiImpact": 3.1,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "z0058",
+      "title": "中医馆推拿助理",
+      "aiImpact": 3.1,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "z0054",
+      "title": "医美咨询师助理",
+      "aiImpact": 3.3,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "z0056",
+      "title": "医药代表（学术推广辅助）",
+      "aiImpact": 3.3,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "z0060",
+      "title": "眼镜验光配镜助理",
+      "aiImpact": 3.4,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "z0057",
+      "title": "药店店员",
+      "aiImpact": 3.5,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "z0059",
+      "title": "康复器械训练师助理",
+      "aiImpact": 3.5,
+      "industry": "医疗卫生"
+    }
+  ],
+  "tertiaryLowNotMedical": [
+    {
+      "id": "z0055",
+      "title": "体检中心导检",
+      "aiImpact": 3.1,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "z0058",
+      "title": "中医馆推拿助理",
+      "aiImpact": 3.1,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "t22",
+      "title": "药剂师",
+      "aiImpact": 3.3,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "z0054",
+      "title": "医美咨询师助理",
+      "aiImpact": 3.3,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "z0056",
+      "title": "医药代表（学术推广辅助）",
+      "aiImpact": 3.3,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "t23",
+      "title": "康复治疗师",
+      "aiImpact": 3.4,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "t46",
+      "title": "临床护工（医院陪护）",
+      "aiImpact": 3.4,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "z0060",
+      "title": "眼镜验光配镜助理",
+      "aiImpact": 3.4,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "z0057",
+      "title": "药店店员",
+      "aiImpact": 3.5,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "z0059",
+      "title": "康复器械训练师助理",
+      "aiImpact": 3.5,
+      "industry": "医疗卫生"
+    },
+    {
+      "id": "t32b",
+      "title": "出庭资深律师/合伙人",
+      "aiImpact": 3.8,
+      "industry": "法律服务"
+    }
+  ],
+  "highWhiteCollar": [
+    {
+      "id": "t36a",
+      "title": "数据报表/取数分析师",
+      "aiImpact": 7.7,
+      "industry": "信息技术"
+    },
+    {
+      "id": "s01b",
+      "title": "电子制造工艺/良率工程师",
+      "aiImpact": 7.5,
+      "industry": "电子制造"
+    },
+    {
+      "id": "s05b",
+      "title": "质量工程师（SPC/失效分析）",
+      "aiImpact": 7.5,
+      "industry": "质检"
+    }
+  ]
+}

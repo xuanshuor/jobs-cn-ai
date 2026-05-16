@@ -7,6 +7,7 @@ import { StatsSidebar } from "@/components/layout/StatsSidebar";
 import { TreemapPanel } from "@/components/treemap/TreemapPanel";
 import { useCareerAssessment } from "@/components/assessment/CareerAssessmentModal";
 import { SiteShareButton } from "@/components/layout/SiteShareButton";
+import { LowSubstitutionJobTags } from "@/components/layout/LowSubstitutionJobTags";
 
 export function App({ dataSource }: { dataSource: DataSource }) {
   const [dataset, setDataset] = useState<JobsDataset | null>(null);
@@ -57,7 +58,7 @@ export function App({ dataSource }: { dataSource: DataSource }) {
             <h1 className="app-header__title">{dataset.meta.title}</h1>
             <p className="app-header__subtitle">
               {dataset.meta.subtitle ??
-                "块面积 = 斐波那契整数比示意布局（φ≈1.618）· 颜色 = 综合替代压力 · 就业见悬停"}
+                "块面积 = 斐波那契整数比示意布局（φ≈1.618）· 颜色 = 2030示意替代率 · 就业见悬停"}
             </p>
           </div>
           <nav className="app-header__nav">
@@ -89,7 +90,12 @@ export function App({ dataSource }: { dataSource: DataSource }) {
           employmentUnit={dataset.meta.employmentUnit}
         />
       }
-      footer={<Methodology />}
+      footer={
+        <>
+          <LowSubstitutionJobTags jobs={dataset.jobs} />
+          <Methodology />
+        </>
+      }
     />
     </>
   );
@@ -124,7 +130,7 @@ function Methodology() {
         </li>
         <li>
           <strong style={{ color: "#e8edf7" }}>可视化</strong>
-          ：Treemap 块面积按斐波那契整数比与黄金分割（φ）排布，保留大小区分但不严格对应就业人数；颜色表示综合替代压力，就业见悬停。
+          ：Treemap 块面积按斐波那契整数比与黄金分割（φ）排布，保留大小区分但不严格对应就业人数；颜色表示 2030 示意岗位替代率（6/10≈替代60%人力需求），就业见悬停。
         </li>
       </ol>
       <p style={{ color: "#8b97ad", marginTop: 6, fontSize: 12 }}>

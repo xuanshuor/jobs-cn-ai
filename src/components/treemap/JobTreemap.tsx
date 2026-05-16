@@ -2,12 +2,12 @@ import { hierarchy, treemap, treemapSquarify } from "d3-hierarchy";
 import type { HierarchyRectangularNode } from "d3-hierarchy";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { IndustrySector, JobOccupation } from "@/core/types";
-import {
-  aiHumanEfficiencyRatio,
-  computeAiStaffingBreakdown,
-  formatAiHumanEfficiencyRatio,
-} from "@/core/aiStaffing";
 import { LABOR_BALANCE_SCENARIO_YEAR } from "@/core/laborForce";
+import {
+  formatEfficiencyRatioLabel,
+  formatSalaryMedianDetail,
+  formatSubstitutionRateLabel,
+} from "./tileMetricFormat";
 import { GOLDEN_RATIO } from "@/core/treemapLayout";
 import {
   type ImpactColorDomain,
@@ -79,12 +79,7 @@ interface TileLayout {
   g: number;
   clipId: string;
   showText: boolean;
-  /** 是否显示「x/10」压力行 */
-  showScoreLine: boolean;
-  /** 是否显示就业人数�?*/
-  showEmpLine: boolean;
   fontSize: number;
-  metaSize: number;
   titleLineTexts: string[];
   padPx: number;
   centerContent: boolean;
@@ -113,10 +108,7 @@ function buildTileLayouts(nodes: TreemapNode[], mobile: boolean): TileLayout[] {
       g,
       clipId: `cp-${idx}-${safe}`,
       showText: label.showText,
-      showScoreLine: label.showScoreLine,
-      showEmpLine: label.showEmpLine,
       fontSize: label.fontSize,
-      metaSize: label.metaSize,
       titleLineTexts: label.titleLineTexts,
       padPx: label.padPx,
       centerContent: label.centerContent,
@@ -130,15 +122,17 @@ export function JobTreemap({
   jobs,
   width,
   height,
-  employmentUnit = "10k",
+  employmentUnit: _employmentUnit = "10k",
   mobile = false,
 }: {
   jobs: JobOccupation[];
   width: number;
   height: number;
+  /** 保留入参供面板统一传参；块标签不再展示就业规模 */
   employmentUnit?: "10k" | "person";
   mobile?: boolean;
 }) {
+  void _employmentUnit;
   const isCoarse = useMediaQuery("(hover: none) and (pointer: coarse)");
   const clickOnly = mobile || isCoarse;
 
@@ -253,10 +247,7 @@ export function JobTreemap({
             g,
             clipId,
             showText,
-            showScoreLine,
-            showEmpLine,
             fontSize,
-            metaSize,
             titleLineTexts,
             padPx,
             centerContent,
@@ -266,11 +257,6 @@ export function JobTreemap({
           const fill = impactTileFill(job.aiImpact, fillA, colorDomain);
           const edge = impactNeonStroke(job.aiImpact, hovered ? 0.95 : 0.38, colorDomain);
           const filterId = hovered ? "url(#tile-glow-strong)" : undefined;
-          const scoreText = `${job.aiImpact.toFixed(1)}/10`;
-          const empText =
-            employmentUnit === "person"
-              ? `${Math.round(job.employment).toLocaleString("zh-CN")}人`
-              : `${job.employment}万人`;
           return (
             <g
               key={job.id}
@@ -316,30 +302,17 @@ export function JobTreemap({
                 strokeWidth={hovered ? 1.75 : 0.65}
                 filter={filterId}
               />
-              {showText || showScoreLine ? (
+              {showText ? (
                 <g clipPath={`url(#${clipId})`} pointerEvents="none">
                   <TileSvgLabels
                     rh={rh}
                     fit={{
                       showText,
-                      showScoreLine,
-                      showEmpLine,
                       fontSize,
-                      metaSize,
                       titleLineTexts,
                       padPx,
                       centerContent,
                     }}
-                    scoreText={scoreText}
-                    empText={empText}
-                    efficiencyText={
-                      hovered && showScoreLine && !clickOnly
-                        ? `AI∶人工 ${(
-                            job.aiLaborStaffing?.[LABOR_BALANCE_SCENARIO_YEAR]?.productivityGap ??
-                            aiHumanEfficiencyRatio(job, LABOR_BALANCE_SCENARIO_YEAR)
-                          ).toFixed(2)} 倍`
-                        : undefined
-                    }
                     hovered={hovered}
                   />
                 </g>
@@ -360,13 +333,12 @@ export function JobTreemap({
         >
           {mobile
             ? `共 ${jobs.length} 个职业 · 块面积≈就业（万人）`
-            : `共 ${jobs.length} 个职业 · 块面积≈就业人数（万人）· 颜色=综合替代压力`}
+            : `共 ${jobs.length} 个职业 · 块面积≈就业人数（万人）· 颜色=2030示意替代率`}
         </text>
       </svg>
       {tip ? (
         <Tooltip
           anchor={tip}
-          employmentUnit={employmentUnit}
           colorDomain={colorDomain}
           onClose={closeTip}
           sheetMode={mobile}
@@ -406,13 +378,11 @@ function clampTooltipPosition(
 
 function Tooltip({
   anchor,
-  employmentUnit,
   colorDomain,
   onClose,
   sheetMode,
 }: {
   anchor: { x: number; y: number; job: JobOccupation };
-  employmentUnit: "10k" | "person";
   colorDomain: ImpactColorDomain;
   onClose: () => void;
   sheetMode: boolean;
@@ -437,33 +407,11 @@ function Tooltip({
     setVisible(true);
   }, [x, y, job.id, maxWidth, sheetMode]);
 
-  const staffing = computeAiStaffingBreakdown(job, LABOR_BALANCE_SCENARIO_YEAR);
-  const empText =
-    employmentUnit === "person"
-      ? `${Math.round(job.employment).toLocaleString("zh-CN")} 人`
-      : `${job.employment} 万人`;
-  const withAiEmp =
-    employmentUnit === "person"
-      ? Math.round(job.employment * staffing.assistedRatio)
-      : Math.round(job.employment * staffing.assistedRatio * 10) / 10;
-  const replacedEmp =
-    employmentUnit === "person"
-      ? Math.round(job.employment * staffing.replacedRatio)
-      : Math.round(job.employment * staffing.replacedRatio * 10) / 10;
-  const withAiText =
-    employmentUnit === "person"
-      ? `${withAiEmp.toLocaleString("zh-CN")} 人`
-      : `${withAiEmp} 万人`;
-  const replacedText =
-    employmentUnit === "person"
-      ? `${replacedEmp.toLocaleString("zh-CN")} 人`
-      : `${replacedEmp} 万人`;
   const barColor = impactTileSolid(job.aiImpact, colorDomain);
   const pct = impactToVisualUnit(job.aiImpact, colorDomain) * 100;
-  const efficiency = formatAiHumanEfficiencyRatio(
-    staffing.productivityGap,
-    LABOR_BALANCE_SCENARIO_YEAR,
-  );
+  const subRateText = formatSubstitutionRateLabel(job);
+  const efficiencyText = formatEfficiencyRatioLabel(job, LABOR_BALANCE_SCENARIO_YEAR);
+  const salaryDetail = formatSalaryMedianDetail(job.salaryMedianAnnual);
 
   return (
     <div
@@ -517,7 +465,7 @@ function Tooltip({
       ) : null}
       <div style={{ marginBottom: 10 }}>
         <span style={{ color: barColor, fontWeight: 700, fontSize: 13 }}>
-          综合替代压力 {job.aiImpact.toFixed(1)}/10
+          {subRateText}（2030示意）
         </span>
         <div
           style={{
@@ -540,16 +488,10 @@ function Tooltip({
           lineHeight: 1.45,
         }}
       >
-        <span style={{ color: css.muted }}>样本就业</span>
-        <span style={{ textAlign: "right" }}>{empText}</span>
-        <span style={{ color: css.muted }}>{LABOR_BALANCE_SCENARIO_YEAR} 无 AI</span>
-        <span style={{ textAlign: "right" }}>{empText}</span>
-        <span style={{ color: css.muted }}>{LABOR_BALANCE_SCENARIO_YEAR} AI 后</span>
-        <span style={{ textAlign: "right" }}>{withAiText}</span>
-        <span style={{ color: css.muted }}>可替代差额</span>
-        <span style={{ textAlign: "right", color: "#e8b090" }}>{replacedText}</span>
-        <span style={{ color: css.muted }}>自动化∶人工</span>
-        <span style={{ textAlign: "right", color: "#8fd4c4" }}>{efficiency.ratioText}</span>
+        <span style={{ color: css.muted }}>效率比</span>
+        <span style={{ textAlign: "right", color: "#8fd4c4" }}>{efficiencyText}</span>
+        <span style={{ color: css.muted }}>薪资中位</span>
+        <span style={{ textAlign: "right" }}>{salaryDetail}</span>
       </div>
       <div
         style={{ marginTop: 10, fontSize: 10, color: "rgba(130, 150, 170, 0.8)", lineHeight: 1.4 }}

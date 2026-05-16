@@ -1,16 +1,12 @@
 export interface TileLabelFit {
   showText: boolean;
-  showScoreLine: boolean;
-  showEmpLine: boolean;
   fontSize: number;
-  metaSize: number;
   titleLineTexts: string[];
   padPx: number;
   centerContent: boolean;
 }
 
 const TITLE_LINE_HEIGHT = 1.34;
-const META_RATIO = 0.72;
 const BREAK_CHARS = /[、，。；：·\/\s]/;
 
 /** 中文标题估算字宽（相对 fontSize） */
@@ -70,11 +66,7 @@ export function wrapTitleLines(
   return lines;
 }
 
-function metaLineHeight(metaSize: number): number {
-  return metaSize * 1.22;
-}
-
-/** 按块宽高计算字号、自动换行标题与元信息行 */
+/** 按块宽高计算字号与标题换行（块面仅展示职业名） */
 export function fitTileLabel(title: string, rw: number, rh: number, mobile: boolean): TileLabelFit {
   const padPx = mobile
     ? 3
@@ -86,84 +78,44 @@ export function fitTileLabel(title: string, rw: number, rh: number, mobile: bool
   const maxTitleFont = mobile
     ? 11.5
     : Math.min(22, Math.max(11, Math.sqrt(innerW * innerH) * 0.045));
-  const maxMetaFont = maxTitleFont * META_RATIO;
 
   if (innerW < (mobile ? 14 : 22) || innerH < (mobile ? 10 : 14)) {
-    const metaSize = Math.max(6, Math.min(maxMetaFont, innerH * 0.55));
     return {
       showText: false,
-      showScoreLine: innerH >= metaLineHeight(metaSize) + 2,
-      showEmpLine: false,
       fontSize: minFont,
-      metaSize,
       titleLineTexts: [],
       padPx,
       centerContent: true,
     };
   }
 
-  let best: TileLabelFit | null = null;
-
   for (let fontSize = maxTitleFont; fontSize >= minFont; fontSize -= mobile ? 0.4 : 0.5) {
     const fs = Math.round(fontSize * 10) / 10;
-    const metaSize = Math.max(6, Math.round(fs * META_RATIO * 10) / 10);
-    const scoreH = metaLineHeight(metaSize);
-    const empH = metaLineHeight(metaSize * 0.95);
     const gap = fs * 0.35;
-
-    let showScoreLine = innerH >= scoreH + gap * 2;
-    let showEmpLine =
-      showScoreLine && innerW >= (mobile ? 34 : 48) && innerH >= scoreH + empH + gap * 3;
-
-    let reserved = (showScoreLine ? scoreH + gap : gap) + (showEmpLine ? empH + gap : 0);
-    let titleAreaH = innerH - reserved;
-    if (titleAreaH < fs * TITLE_LINE_HEIGHT) {
-      showEmpLine = false;
-      reserved = (showScoreLine ? scoreH + gap : gap);
-      titleAreaH = innerH - reserved;
-    }
-    if (titleAreaH < fs * TITLE_LINE_HEIGHT) {
-      showScoreLine = false;
-      showEmpLine = false;
-      titleAreaH = innerH - gap;
-    }
-
+    const titleAreaH = innerH - gap;
     const maxLines = Math.min(
-      mobile ? 3 : 4,
+      mobile ? 4 : 5,
       Math.max(1, Math.floor(titleAreaH / (fs * TITLE_LINE_HEIGHT))),
     );
     const titleLineTexts = wrapTitleLines(title, maxLines, innerW, fs);
     const titleUsedH = titleLineTexts.length * fs * TITLE_LINE_HEIGHT;
-    const totalH = titleUsedH + reserved;
 
-    if (totalH > innerH + 0.5) continue;
+    if (titleUsedH > innerH + 0.5) continue;
 
-    const candidate: TileLabelFit = {
+    return {
       showText: titleLineTexts.length > 0,
-      showScoreLine,
-      showEmpLine,
       fontSize: fs,
-      metaSize,
       titleLineTexts,
       padPx,
-      centerContent: false,
+      centerContent: titleUsedH < innerH * 0.72,
     };
-
-    best = candidate;
-    break;
   }
 
-  if (best) return best;
-
   const fs = minFont;
-  const metaSize = Math.max(6, fs * META_RATIO);
   const titleLineTexts = wrapTitleLines(title, 1, innerW, fs);
   return {
     showText: titleLineTexts.length > 0,
-    showScoreLine: innerH >= metaLineHeight(metaSize) + 4,
-    showEmpLine: false,
     fontSize: fs,
-    metaSize,
     titleLineTexts,
     padPx,
     centerContent: innerH < fs * 3,

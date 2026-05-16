@@ -21,11 +21,11 @@ const SECTOR_LABEL: Record<IndustrySector, string> = {
 };
 
 /**
- * 将 0–10 综合替代压力映射为整岗替代风险系数（0–1，示意）。
- * 压力 ≤4 视为低；10 视为极高。
+ * 将 0–10 岗位替代率映射为整岗替代风险系数（0–1，示意）。
+ * 与 `aiImpact` 定义一致：6/10 → 0.6。
  */
 export function displacementRiskFromImpact(impact: number): number {
-  return Math.max(0, Math.min(1, (impact - 4) / 6));
+  return Math.max(0, Math.min(1, impact / 10));
 }
 
 /** 任务份额：完全自动化 + 协作任务一半视同岗位压缩（示意） */
