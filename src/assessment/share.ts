@@ -1,7 +1,10 @@
 import type { AssessmentResult } from "./types";
 
 const SHARE_PARAM = "share";
-const SHARE_VERSION = 1;
+const SHARE_VERSION = 2;
+
+/** 线上站点根地址（末尾带 /），分享链接固定使用此地址，避免 localhost */
+const DEFAULT_PUBLIC_SITE_URL = "https://xuanshuor.github.io/jobs-cn-ai/";
 
 function toBase64Url(bytes: Uint8Array): string {
   let binary = "";
@@ -39,6 +42,22 @@ function isAssessmentResult(v: unknown): v is AssessmentResult {
   );
 }
 
+/** 公网站点根 URL，用于生成可分享的链接 */
+export function getPublicSiteBase(): string {
+  const fromEnv = import.meta.env.VITE_PUBLIC_SITE_URL?.trim();
+  if (fromEnv) return fromEnv.endsWith("/") ? fromEnv : `${fromEnv}/`;
+  return DEFAULT_PUBLIC_SITE_URL;
+}
+
+function isOnPublicSite(loc: Location): boolean {
+  try {
+    const pub = new URL(getPublicSiteBase());
+    return loc.hostname === pub.hostname && loc.pathname.startsWith(pub.pathname.replace(/\/$/, ""));
+  } catch {
+    return false;
+  }
+}
+
 export function encodeShareResult(result: AssessmentResult): string {
   const payload = { v: SHARE_VERSION, ...trimResultForShare(result) };
   const json = JSON.stringify(payload);
@@ -59,11 +78,9 @@ export function decodeShareResult(token: string): AssessmentResult | null {
   }
 }
 
+/** 生成可对外分享的完整 URL（始终为公网地址） */
 export function buildShareUrl(result: AssessmentResult): string {
-  const basePath = import.meta.env.BASE_URL ?? "/";
-  const origin = typeof window !== "undefined" ? window.location.origin : "";
-  const path = basePath.endsWith("/") ? basePath : `${basePath}/`;
-  const url = new URL(path, origin || "http://localhost");
+  const url = new URL(getPublicSiteBase());
   url.searchParams.set(SHARE_PARAM, encodeShareResult(result));
   return url.toString();
 }
@@ -78,8 +95,27 @@ export function parseShareFromLocation(
 
 export function applyShareUrlToHistory(result: AssessmentResult): void {
   if (typeof window === "undefined") return;
-  const url = buildShareUrl(result);
-  window.history.replaceState({ assessmentShare: true }, document.title, url);
+  const token = encodeShareResult(result);
+  const loc = window.location;
+
+  if (isOnPublicSite(loc)) {
+    const url = new URL(getPublicSiteBase());
+    url.searchParams.set(SHARE_PARAM, token);
+    window.history.replaceState(
+      { assessmentShare: true },
+      document.title,
+      url.pathname + url.search + url.hash,
+    );
+    return;
+  }
+
+  const url = new URL(loc.href);
+  url.searchParams.set(SHARE_PARAM, token);
+  window.history.replaceState(
+    { assessmentShare: true },
+    document.title,
+    url.pathname + url.search + url.hash,
+  );
 }
 
 export function clearShareUrlFromHistory(): void {
@@ -89,20 +125,16 @@ export function clearShareUrlFromHistory(): void {
   window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
 }
 
-/** 站点首页地址（不含测评参数） */
-export function getSiteHomeUrl(loc: Location = window.location): string {
-  const basePath = import.meta.env.BASE_URL ?? "/";
-  const path = basePath.endsWith("/") ? basePath : `${basePath}/`;
-  return new URL(path, loc.origin).toString();
+/** 站点首页（公网） */
+export function getSiteHomeUrl(): string {
+  return getPublicSiteBase();
 }
 
-/** 顶部分享用：优先当前页（含测评链接），否则带测评结果，否则首页 */
+/** 顶部分享：测评结果用公网分享链，否则首页 */
 export function getPageShareUrl(
   storedResult?: AssessmentResult | null,
-  loc: Location = window.location,
+  _loc: Location = window.location,
 ): string {
-  const current = new URL(loc.href);
-  if (current.searchParams.has(SHARE_PARAM)) return current.toString();
   if (storedResult) return buildShareUrl(storedResult);
-  return getSiteHomeUrl(loc);
+  return getSiteHomeUrl();
 }

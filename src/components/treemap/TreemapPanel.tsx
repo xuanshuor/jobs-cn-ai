@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { JobOccupation } from "@/core/types";
 import { JobTreemap } from "@/components/treemap/JobTreemap";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export function TreemapPanel({
   jobs,
@@ -10,6 +11,7 @@ export function TreemapPanel({
   employmentUnit: "10k" | "person";
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const isMobile = useMediaQuery("(max-width: 640px)");
   const [size, setSize] = useState({ w: 800, h: 520 });
 
   useEffect(() => {
@@ -37,14 +39,32 @@ export function TreemapPanel({
     };
   }, []);
 
+  const layoutW = isMobile ? Math.max(size.w, 580) : size.w;
+  const layoutH = isMobile ? Math.max(size.h, Math.round(layoutW * 0.72)) : size.h;
+
   return (
-    <div ref={ref} className="treemap-surface">
-      <JobTreemap
-        jobs={jobs}
-        width={size.w}
-        height={size.h}
-        employmentUnit={employmentUnit}
-      />
+    <div
+      ref={ref}
+      className={isMobile ? "treemap-surface treemap-surface--mobile" : "treemap-surface"}
+    >
+      {isMobile ? (
+        <p className="treemap-mobile-hint" role="note">
+          点击色块查看详情 · 在图中滑动可浏览更多区域
+        </p>
+      ) : null}
+      <div
+        className={
+          isMobile ? "treemap-scroll-viewport" : "treemap-scroll-viewport treemap-scroll-viewport--fill"
+        }
+      >
+        <JobTreemap
+          jobs={jobs}
+          width={layoutW}
+          height={layoutH}
+          employmentUnit={employmentUnit}
+          mobile={isMobile}
+        />
+      </div>
     </div>
   );
 }
