@@ -10,9 +10,19 @@ export type MbtiDimension = "ei" | "sn" | "tf" | "jp";
 export interface MbtiQuestion {
   id: string;
   dimension: MbtiDimension;
+  /** 情境铺垫（可选） */
+  scene?: string;
   prompt: string;
   optionA: { label: string; letter: MbtiLetter };
   optionB: { label: string; letter: MbtiLetter };
+}
+
+export interface RiasecScenario {
+  id: string;
+  scene?: string;
+  prompt: string;
+  optionA: { label: string; code: RiasecCode };
+  optionB: { label: string; code: RiasecCode };
 }
 
 /** 与数据集 industryLabel / 岗位关键词对齐 */
@@ -67,112 +77,191 @@ export const AI_USAGE_OPTIONS: ChoiceOption[] = [
   { value: "5", label: "核心流程已深度依赖 AI" },
 ];
 
-/** 每维度 2 题，工作情境表述，提交时按维度计票 */
+/** 每维度 3 题：身边可发生的小情境，二选一迫选，按维度多数票计分 */
 export const MBTI_QUESTIONS: MbtiQuestion[] = [
   {
     id: "ei1",
     dimension: "ei",
-    prompt: "开会讨论方案时，你通常更倾向于——",
-    optionA: { label: "先独自理清思路再发言", letter: "I" },
-    optionB: { label: "当场交流，边说边想", letter: "E" },
+    scene: "下班路上，有人骑车栽进路边沟，周围人惊呼围过来",
+    prompt: "你的第一反应更像——",
+    optionA: { label: "先确认是否受伤、拨打 120，轻声安抚，少围观", letter: "I" },
+    optionB: { label: "大声招呼路人一起帮忙，边拉人边问要不要联系家属", letter: "E" },
   },
   {
     id: "ei2",
     dimension: "ei",
-    prompt: "处理复杂任务时，你的能量来源更常是——",
-    optionA: { label: "安静专注的独立工作", letter: "I" },
-    optionB: { label: "与同事协作、频繁互动", letter: "E" },
+    scene: "公司聚餐，领导说「大家向各桌敬一圈，活跃气氛」",
+    prompt: "你更可能——",
+    optionA: { label: "只跟邻座简单碰杯，能躲就躲，不想成为焦点", letter: "I" },
+    optionB: { label: "主动起身说几句，逐桌敬酒，越聊越起劲", letter: "E" },
+  },
+  {
+    id: "ei3",
+    dimension: "ei",
+    scene: "午休时办公室突然热闹起来，同事拉你聊八卦",
+    prompt: "你更想——",
+    optionA: { label: "戴耳机下楼独自吃饭，歇够了再回来", letter: "I" },
+    optionB: { label: "顺势加入，越聊越精神，差点忘了休息", letter: "E" },
   },
   {
     id: "sn1",
     dimension: "sn",
-    prompt: "阅读工作资料时，你更关注——",
-    optionA: { label: "可执行的具体步骤与历史数据", letter: "S" },
-    optionB: { label: "整体模式、趋势与多种可能", letter: "N" },
+    scene: "家里 Wi‑Fi 时快时慢，你想彻底搞清楚",
+    prompt: "你会——",
+    optionA: { label: "按路由器说明书一步步测速、重启、换信道", letter: "S" },
+    optionB: { label: "先猜「是不是邻居蹭网/线路老化」，再针对性试", letter: "N" },
   },
   {
     id: "sn2",
     dimension: "sn",
-    prompt: "接到新任务时，你更习惯——",
-    optionA: { label: "按既有流程与先例推进", letter: "S" },
-    optionB: { label: "先构想新做法再落地细节", letter: "N" },
+    scene: "朋友发消息：「你最近看着不对劲，到底怎么了？」",
+    prompt: "你更可能回——",
+    optionA: { label: "具体说睡眠、饮食、哪天开始不舒服", letter: "S" },
+    optionB: { label: "往压力、关系、前途上聊，猜背后更大的原因", letter: "N" },
+  },
+  {
+    id: "sn3",
+    dimension: "sn",
+    scene: "公司还没官宣，群里已在传「要被收购」",
+    prompt: "你更会——",
+    optionA: { label: "等正式通知，只按已确认的信息行动", letter: "S" },
+    optionB: { label: "脑补几种结局，提前想「万一真发生怎么办」", letter: "N" },
   },
   {
     id: "tf1",
     dimension: "tf",
-    prompt: "团队出现分歧时，你更看重——",
-    optionA: { label: "客观标准、规则与公平", letter: "T" },
-    optionB: { label: "彼此感受与关系和谐", letter: "F" },
+    scene: "扶完人你终于赶到，重要会议已开始，同事看你一眼",
+    prompt: "你更可能——",
+    optionA: { label: "简短说明事实，立刻进入议题，按议程推进", letter: "T" },
+    optionB: { label: "先道歉并关心刚才那人，再向同事解释迟到", letter: "F" },
   },
   {
     id: "tf2",
     dimension: "tf",
-    prompt: "评价同事绩效时，你更倾向于——",
-    optionA: { label: "用可量化结果说话", letter: "T" },
-    optionB: { label: "结合动机、努力与情境", letter: "F" },
+    scene: "好友让你评价他熬夜做的方案，你觉得问题很明显",
+    prompt: "你会——",
+    optionA: { label: "直接指出硬伤和改法，对错比面子重要", letter: "T" },
+    optionB: { label: "先肯定用心，再委婉提建议，怕伤感情", letter: "F" },
+  },
+  {
+    id: "tf3",
+    dimension: "tf",
+    scene: "同事因家里急事常迟到，但团队有明确的考勤规定",
+    prompt: "你更倾向——",
+    optionA: { label: "按规定处理，规则对所有人一致才公平", letter: "T" },
+    optionB: { label: "私下沟通困难，争取灵活处理，顾人情", letter: "F" },
   },
   {
     id: "jp1",
     dimension: "jp",
-    prompt: "面对截止日期，你通常——",
-    optionA: { label: "提前规划并按节点完成", letter: "J" },
-    optionB: { label: "临近截止时集中冲刺", letter: "P" },
+    scene: "领导丢来一个「没头绪」的难题：「周五前给个思路」",
+    prompt: "你更可能——",
+    optionA: { label: "当天拆任务、列提纲，留出修改时间", letter: "J" },
+    optionB: { label: "先泡资料里随便逛，临近截止时灵感爆发", letter: "P" },
   },
   {
     id: "jp2",
     dimension: "jp",
-    prompt: "你的工作桌面与任务清单——",
-    optionA: { label: "希望井井有条、状态明确", letter: "J" },
-    optionB: { label: "保持灵活，随情况调整", letter: "P" },
+    scene: "明天一早出差，今晚还在刷手机",
+    prompt: "你通常——",
+    optionA: { label: "按清单收行李、设闹钟，心里才踏实", letter: "J" },
+    optionB: { label: "相信明早能搞定，经常临出门再收拾", letter: "P" },
+  },
+  {
+    id: "jp3",
+    dimension: "jp",
+    scene: "朋友约周末出去玩，但还没定去哪",
+    prompt: "你更喜欢——",
+    optionA: { label: "提前订好票和路线，按表走", letter: "J" },
+    optionB: { label: "到了再说，看心情临时改计划", letter: "P" },
   },
 ];
-
-export interface RiasecScenario {
-  id: string;
-  prompt: string;
-  optionA: { label: string; code: RiasecCode };
-  optionB: { label: string; code: RiasecCode };
-}
 
 /** 霍兰德六维情境迫选（每题二选一，累计得分后取前三） */
 export const RIASEC_SCENARIOS: RiasecScenario[] = [
   {
     id: "r_vs_i",
-    prompt: "若只能二选一，你更愿意——",
-    optionA: { label: "拆装维修设备、使用工具完成实物", code: "R" },
-    optionB: { label: "查阅文献、做实验或数据分析", code: "I" },
+    scene: "公司组织「技能交换日」，只能报名一个工作坊",
+    prompt: "你更想参加——",
+    optionA: { label: "机床拆装、设备点检与现场排障", code: "R" },
+    optionB: { label: "实验设计、数据建模或算法复盘", code: "I" },
   },
   {
     id: "a_vs_c",
-    prompt: "你更享受——",
-    optionA: { label: "设计视觉、写作或表演表达", code: "A" },
-    optionB: { label: "按规范核对账目、档案与流程", code: "C" },
+    scene: "下周要向客户交付一份成果",
+    prompt: "你更愿意负责——",
+    optionA: { label: "主视觉、短视频脚本或品牌故事线", code: "A" },
+    optionB: { label: "台账核对、流程清单与合规归档", code: "C" },
   },
   {
     id: "s_vs_e",
-    prompt: "成就感更多来自——",
-    optionA: { label: "辅导他人、教学或服务患者", code: "S" },
-    optionB: { label: "谈判成交、带队达成业绩目标", code: "E" },
+    scene: "季度评优，只能选一种「最有成就感」的时刻",
+    prompt: "你更会选——",
+    optionA: { label: "手把手带新人上手，或帮客户解决难题", code: "S" },
+    optionB: { label: "谈成大单，或带队超额完成 KPI", code: "E" },
   },
   {
-    id: "i_vs_s",
-    prompt: "理想的一天包含——",
-    optionA: { label: "独立研究、建模或技术攻关", code: "I" },
-    optionB: { label: "与多人沟通、组织活动", code: "S" },
+    id: "i_vs_a",
+    scene: "自由安排一个完整的工作日",
+    prompt: "你更享受——",
+    optionA: { label: "啃技术文档、做 A/B 测试或写研究报告", code: "I" },
+    optionB: { label: "头脑风暴、画原型、打磨文案与镜头", code: "A" },
   },
   {
-    id: "r_vs_e",
-    prompt: "你更擅长——",
-    optionA: { label: "现场动手、巡检与实操", code: "R" },
-    optionB: { label: "说服客户、推动项目落地", code: "E" },
+    id: "r_vs_c",
+    scene: "仓库/车间出现突发状况",
+    prompt: "你更愿意——",
+    optionA: { label: "到现场排查、动手修复设备", code: "R" },
+    optionB: { label: "整理库存表、排班表，把流程理顺", code: "C" },
   },
   {
-    id: "a_vs_i",
-    prompt: "你更愿意长期投入——",
-    optionA: { label: "创意产业、内容或设计", code: "A" },
-    optionB: { label: "科研、工程或算法类工作", code: "I" },
+    id: "e_vs_s",
+    scene: "部门需要一名临时负责人推进项目",
+    prompt: "你更擅长扮演——",
+    optionA: { label: "对外谈判、拉资源、盯里程碑", code: "E" },
+    optionB: { label: "协调成员、做培训、化解内部摩擦", code: "S" },
+  },
+  {
+    id: "a_vs_e",
+    scene: "新产品上市前的最后一轮准备",
+    prompt: "你更想投入——",
+    optionA: { label: "包装创意、传播话术与用户体验", code: "A" },
+    optionB: { label: "定价策略、渠道拓展与商务合作", code: "E" },
+  },
+  {
+    id: "i_vs_e",
+    scene: "公司要评估一个新兴市场机会",
+    prompt: "你更愿意主导——",
+    optionA: { label: "竞品数据拆解、模型测算与可行性报告", code: "I" },
+    optionB: { label: "客户拜访、方案路演与合同条款博弈", code: "E" },
+  },
+  {
+    id: "r_vs_s",
+    scene: "社区/厂区联合举办一场活动",
+    prompt: "你更愿意——",
+    optionA: { label: "搭建展台、搬运物资、保障现场安全", code: "R" },
+    optionB: { label: "接待咨询、讲解健康知识或职业指导", code: "S" },
   },
 ];
+
+export const MBTI_STEP_GROUPS: { title: string; dimensions: MbtiDimension[] }[] = [
+  { title: "能量与信息（E/I · S/N）", dimensions: ["ei", "sn"] },
+  { title: "决策与节奏（T/F · J/P）", dimensions: ["tf", "jp"] },
+];
+
+/** 指定维度的 MBTI 题是否均已作答 */
+export function mbtiCompleteForDimensions(
+  votes: (MbtiLetter | "")[],
+  dimensions: MbtiDimension[],
+): boolean {
+  for (let i = 0; i < MBTI_QUESTIONS.length; i++) {
+    const q = MBTI_QUESTIONS[i]!;
+    if (!dimensions.includes(q.dimension)) continue;
+    const vote = votes[i];
+    if (vote !== q.optionA.letter && vote !== q.optionB.letter) return false;
+  }
+  return true;
+}
 
 export const RIASEC_OPTIONS: { code: RiasecCode; label: string; hint: string }[] = [
   { code: "R", label: "现实型 (R)", hint: "动手、工具、现场、设备" },

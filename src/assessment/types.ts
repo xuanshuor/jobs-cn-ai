@@ -9,8 +9,8 @@ export interface AssessmentAnswers {
   education: string;
   taskTags: string[];
   aiToolUsage: number;
-  /** 与 MBTI_QUESTIONS 顺序一致，共 8 题 */
-  mbtiVotes: MbtiLetter[];
+  /** 与 MBTI_QUESTIONS 顺序一致，共 12 题；空字符串表示未作答 */
+  mbtiVotes: (MbtiLetter | "")[];
   /** 与 RIASEC_SCENARIOS 顺序一致，每题所选 code */
   riasecScenarioChoices: RiasecCode[];
 }

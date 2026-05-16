@@ -629,6 +629,14 @@ code {
   color: #b8e8ff;
 }
 
+.assessment-mbti__scene {
+  margin: 0 0 4px;
+  font-size: 10px;
+  line-height: 1.4;
+  letter-spacing: 0.03em;
+  color: rgba(143, 212, 196, 0.78);
+}
+
 .assessment-mbti__q {
   margin: 0 0 6px;
   font-size: 12px;

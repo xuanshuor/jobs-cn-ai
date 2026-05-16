@@ -287,26 +287,37 @@ function riskLevel(pct: number): "低" | "中" | "高" {
   return "高";
 }
 
-export function resolveMbtiType(votes: MbtiLetter[]): string {
+export function resolveMbtiType(votes: (MbtiLetter | "")[]): string {
   const dimOrder: MbtiDimension[] = ["ei", "sn", "tf", "jp"];
   const letters: MbtiLetter[] = [];
 
   for (const dim of dimOrder) {
     const questions = MBTI_QUESTIONS.filter((q) => q.dimension === dim);
+    if (questions.length === 0) continue;
+
     const counts = new Map<MbtiLetter, number>();
+    let tiebreak: MbtiLetter | null = null;
+
     for (const q of questions) {
       const idx = MBTI_QUESTIONS.indexOf(q);
       const vote = votes[idx];
       if (!vote) continue;
-      counts.set(vote, (counts.get(vote) ?? 0) + 1);
+      if (vote === q.optionA.letter || vote === q.optionB.letter) {
+        counts.set(vote, (counts.get(vote) ?? 0) + 1);
+        tiebreak = vote;
+      }
     }
-    const pair = questions[0];
-    if (!pair) continue;
-    const a = pair.optionA.letter;
-    const b = pair.optionB.letter;
+
+    const a = questions[0]!.optionA.letter;
+    const b = questions[0]!.optionB.letter;
     const ca = counts.get(a) ?? 0;
     const cb = counts.get(b) ?? 0;
-    letters.push(ca >= cb ? a : b);
+
+    if (ca === cb) {
+      letters.push(tiebreak ?? a);
+    } else {
+      letters.push(ca > cb ? a : b);
+    }
   }
 
   return letters.join("");
