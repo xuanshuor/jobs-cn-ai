@@ -1,5 +1,6 @@
-# 推送到默认分支后构建并发布到 GitHub Pages（与 https://madeye.github.io/jobs/ 同类托管）
-# 使用前：仓库 Settings → Pages → Build and deployment → Source 选 “GitHub Actions”
+# 构建后推送到 gh-pages 分支，由 GitHub Pages「从分支部署」托管。
+# 首次启用：仓库 Settings → Pages → Source 选「Deploy from a branch」
+# → Branch: gh-pages，Folder: / (root)
 name: Deploy GitHub Pages
 
 on:
@@ -8,16 +9,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,23 +27,17 @@ jobs:
           cache: npm
 
       - name: Install
-        run: npm install
+        run: npm ci
 
       - name: Build
         run: npm run build
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
 
-      - uses: actions/upload-pages-artifact@v3
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          # 避免 Jekyll 处理静态资源
+          enable_jekyll: false
