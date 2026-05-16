@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import type { JobOccupation } from "@/core/types";
+import type { JobOccupation, JobsDataset } from "@/core/types";
+import { formatJobEmploymentStats } from "@/core/jobEmploymentStats";
 import {
   careerSedimentFormulaHint,
   careerSedimentPath,
@@ -14,14 +15,19 @@ import {
   impactTileSolid,
 } from "@/config/theme";
 import {
-  formatAnnualSalaryLabel,
   formatEfficiencyRatioLabel,
-  formatSalaryMedianDetail,
+  formatSalaryRange,
 } from "@/components/treemap/tileMetricFormat";
 
 const TOP_N = 80;
 
-export function LowSubstitutionJobTags({ jobs }: { jobs: JobOccupation[] }) {
+export function LowSubstitutionJobTags({
+  jobs,
+  employmentUnit = "10k",
+}: {
+  jobs: JobOccupation[];
+  employmentUnit?: JobsDataset["meta"]["employmentUnit"];
+}) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const { items, colorDomain } = useMemo(() => {
@@ -56,9 +62,9 @@ export function LowSubstitutionJobTags({ jobs }: { jobs: JobOccupation[] }) {
           const accent = impactTileSolid(job.aiImpact, colorDomain);
           const border = impactNeonStroke(job.aiImpact, 0.42, colorDomain);
           const efficiencyText = formatEfficiencyRatioLabel(job, LABOR_BALANCE_SCENARIO_YEAR);
-          const salaryDetail = formatSalaryMedianDetail(job.salaryMedianAnnual);
-          const annualSalaryLabel = formatAnnualSalaryLabel(job.salaryMedianAnnual);
-          const subRatePct = `${Math.round(job.aiImpact * 10)}%`;
+          const salaryRange = formatSalaryRange(job);
+          const employmentStats = formatJobEmploymentStats(job, employmentUnit);
+          const subRatePct = `${employmentStats.replacedRatioPct}%`;
           const efficiencyValue = efficiencyText.replace(/^效率比\s*/, "");
           const sedimentPath = careerSedimentPath(job);
           const sediment20yPv = computeCareerSediment20yPotential(job, LABOR_BALANCE_SCENARIO_YEAR);
@@ -89,8 +95,11 @@ export function LowSubstitutionJobTags({ jobs }: { jobs: JobOccupation[] }) {
                   {index + 1}
                 </span>
                 <span className="low-sub-tags__name">{job.title}</span>
-                <span className="low-sub-tags__salary" title={annualSalaryLabel}>
-                  {annualSalaryLabel}
+                <span
+                  className="low-sub-tags__salary"
+                  title={`中位年薪 ${salaryRange.medianText} · 相对高位 ${salaryRange.highText}`}
+                >
+                  {salaryRange.chipText}
                 </span>
                 <span className="low-sub-tags__chevron" aria-hidden>
                   {expanded ? "▾" : "▸"}
@@ -104,8 +113,29 @@ export function LowSubstitutionJobTags({ jobs }: { jobs: JobOccupation[] }) {
                   aria-label={`${job.title} 详情`}
                 >
                   <p className="low-sub-tags__metric">
-                    <span className="low-sub-tags__metric-label">年薪中位</span>
-                    <span className="low-sub-tags__metric-value">{salaryDetail}</span>
+                    <span className="low-sub-tags__metric-label">从业人数</span>
+                    <span className="low-sub-tags__metric-value">{employmentStats.employmentText}</span>
+                  </p>
+                  <p className="low-sub-tags__metric">
+                    <span className="low-sub-tags__metric-label">
+                      被替代人数
+                      <span className="low-sub-tags__path-badge">{LABOR_BALANCE_SCENARIO_YEAR}</span>
+                    </span>
+                    <span className="low-sub-tags__metric-value low-sub-tags__metric-value--warn">
+                      {employmentStats.replacedText}
+                    </span>
+                  </p>
+                  <p className="low-sub-tags__metric">
+                    <span className="low-sub-tags__metric-label">年薪区间</span>
+                    <span className="low-sub-tags__metric-value">{salaryRange.rangeText}</span>
+                  </p>
+                  <p className="low-sub-tags__metric low-sub-tags__metric--sub">
+                    <span className="low-sub-tags__metric-label">中位年薪</span>
+                    <span className="low-sub-tags__metric-value">{salaryRange.medianText}</span>
+                  </p>
+                  <p className="low-sub-tags__metric low-sub-tags__metric--sub">
+                    <span className="low-sub-tags__metric-label">相对高位</span>
+                    <span className="low-sub-tags__metric-value">{salaryRange.highText}</span>
                   </p>
                   <p className="low-sub-tags__metric">
                     <span className="low-sub-tags__metric-label">

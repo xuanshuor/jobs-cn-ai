@@ -1,20 +1,25 @@
 export interface TileLabelFit {
   showText: boolean;
+  showEmploymentLine: boolean;
   fontSize: number;
+  metaSize: number;
   titleLineTexts: string[];
   padPx: number;
   centerContent: boolean;
 }
 
 const TITLE_LINE_HEIGHT = 1.34;
+const META_RATIO = 0.72;
 const BREAK_CHARS = /[、，。；：·\/\s]/;
 
-/** 中文标题估算字宽（相对 fontSize） */
 function charWidthPx(fontSize: number): number {
   return fontSize * 0.92;
 }
 
-/** 按块宽自动换行，优先在标点处断行 */
+function metaLineHeight(metaSize: number): number {
+  return metaSize * 1.22;
+}
+
 export function wrapTitleLines(
   title: string,
   maxLines: number,
@@ -66,7 +71,7 @@ export function wrapTitleLines(
   return lines;
 }
 
-/** 按块宽高计算字号与标题换行（块面仅展示职业名） */
+/** 按块宽高计算字号、标题换行与底部从业人数行 */
 export function fitTileLabel(title: string, rw: number, rh: number, mobile: boolean): TileLabelFit {
   const padPx = mobile
     ? 3
@@ -78,11 +83,15 @@ export function fitTileLabel(title: string, rw: number, rh: number, mobile: bool
   const maxTitleFont = mobile
     ? 11.5
     : Math.min(22, Math.max(11, Math.sqrt(innerW * innerH) * 0.045));
+  const maxMetaFont = maxTitleFont * META_RATIO;
 
   if (innerW < (mobile ? 14 : 22) || innerH < (mobile ? 10 : 14)) {
+    const metaSize = Math.max(6, Math.min(maxMetaFont, innerH * 0.55));
     return {
       showText: false,
+      showEmploymentLine: innerH >= metaLineHeight(metaSize) + 2,
       fontSize: minFont,
+      metaSize,
       titleLineTexts: [],
       padPx,
       centerContent: true,
@@ -91,31 +100,49 @@ export function fitTileLabel(title: string, rw: number, rh: number, mobile: bool
 
   for (let fontSize = maxTitleFont; fontSize >= minFont; fontSize -= mobile ? 0.4 : 0.5) {
     const fs = Math.round(fontSize * 10) / 10;
+    const metaSize = Math.max(6, Math.round(fs * META_RATIO * 10) / 10);
     const gap = fs * 0.35;
-    const titleAreaH = innerH - gap;
+    const empH = metaLineHeight(metaSize);
+
+    let showEmploymentLine = innerH >= empH + gap * 2;
+    let reserved = showEmploymentLine ? empH + gap : gap;
+    let titleAreaH = innerH - reserved;
+
+    if (titleAreaH < fs * TITLE_LINE_HEIGHT && showEmploymentLine) {
+      showEmploymentLine = innerH >= empH + gap;
+      reserved = showEmploymentLine ? empH + gap : gap;
+      titleAreaH = innerH - reserved;
+    }
+
     const maxLines = Math.min(
       mobile ? 4 : 5,
-      Math.max(1, Math.floor(titleAreaH / (fs * TITLE_LINE_HEIGHT))),
+      Math.max(0, Math.floor(titleAreaH / (fs * TITLE_LINE_HEIGHT))),
     );
-    const titleLineTexts = wrapTitleLines(title, maxLines, innerW, fs);
+    const titleLineTexts = maxLines > 0 ? wrapTitleLines(title, maxLines, innerW, fs) : [];
     const titleUsedH = titleLineTexts.length * fs * TITLE_LINE_HEIGHT;
+    const totalH = titleUsedH + reserved;
 
-    if (titleUsedH > innerH + 0.5) continue;
+    if (totalH > innerH + 0.5) continue;
 
     return {
       showText: titleLineTexts.length > 0,
+      showEmploymentLine,
       fontSize: fs,
+      metaSize,
       titleLineTexts,
       padPx,
-      centerContent: titleUsedH < innerH * 0.72,
+      centerContent: totalH < innerH * 0.72,
     };
   }
 
   const fs = minFont;
+  const metaSize = Math.max(6, fs * META_RATIO);
   const titleLineTexts = wrapTitleLines(title, 1, innerW, fs);
   return {
     showText: titleLineTexts.length > 0,
+    showEmploymentLine: innerH >= metaLineHeight(metaSize) + 4,
     fontSize: fs,
+    metaSize,
     titleLineTexts,
     padPx,
     centerContent: innerH < fs * 3,

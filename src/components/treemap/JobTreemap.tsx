@@ -20,8 +20,10 @@ import {
 } from "@/config/theme";
 import { FONT_UI_STACK } from "@/config/typography";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { formatTileEmploymentLabel } from "./tileMetricFormat";
 import { fitTileLabel } from "./tileLabelFit";
 import { TileSvgLabels } from "./TileSvgLabels";
+import type { JobsDataset } from "@/core/types";
 
 interface TreeNode {
   name: string;
@@ -79,7 +81,9 @@ interface TileLayout {
   g: number;
   clipId: string;
   showText: boolean;
+  showEmploymentLine: boolean;
   fontSize: number;
+  metaSize: number;
   titleLineTexts: string[];
   padPx: number;
   centerContent: boolean;
@@ -108,7 +112,9 @@ function buildTileLayouts(nodes: TreemapNode[], mobile: boolean): TileLayout[] {
       g,
       clipId: `cp-${idx}-${safe}`,
       showText: label.showText,
+      showEmploymentLine: label.showEmploymentLine,
       fontSize: label.fontSize,
+      metaSize: label.metaSize,
       titleLineTexts: label.titleLineTexts,
       padPx: label.padPx,
       centerContent: label.centerContent,
@@ -122,17 +128,15 @@ export function JobTreemap({
   jobs,
   width,
   height,
-  employmentUnit: _employmentUnit = "10k",
+  employmentUnit = "10k",
   mobile = false,
 }: {
   jobs: JobOccupation[];
   width: number;
   height: number;
-  /** 保留入参供面板统一传参；块标签不再展示就业规模 */
-  employmentUnit?: "10k" | "person";
+  employmentUnit?: JobsDataset["meta"]["employmentUnit"];
   mobile?: boolean;
 }) {
-  void _employmentUnit;
   const isCoarse = useMediaQuery("(hover: none) and (pointer: coarse)");
   const clickOnly = mobile || isCoarse;
 
@@ -247,12 +251,15 @@ export function JobTreemap({
             g,
             clipId,
             showText,
+            showEmploymentLine,
             fontSize,
+            metaSize,
             titleLineTexts,
             padPx,
             centerContent,
           } = t;
           const hovered = activeId === job.id;
+          const employmentText = formatTileEmploymentLabel(job.employment, employmentUnit);
           const fillA = hovered ? 0.82 : 0.55;
           const fill = impactTileFill(job.aiImpact, fillA, colorDomain);
           const edge = impactNeonStroke(job.aiImpact, hovered ? 0.95 : 0.38, colorDomain);
@@ -302,17 +309,20 @@ export function JobTreemap({
                 strokeWidth={hovered ? 1.75 : 0.65}
                 filter={filterId}
               />
-              {showText ? (
+              {showText || showEmploymentLine ? (
                 <g clipPath={`url(#${clipId})`} pointerEvents="none">
                   <TileSvgLabels
                     rh={rh}
                     fit={{
                       showText,
+                      showEmploymentLine,
                       fontSize,
+                      metaSize,
                       titleLineTexts,
                       padPx,
                       centerContent,
                     }}
+                    employmentText={employmentText}
                     hovered={hovered}
                   />
                 </g>

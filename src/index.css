@@ -388,6 +388,20 @@ a.link:hover {
   margin-bottom: 0;
 }
 
+.low-sub-tags__metric--sub {
+  margin-bottom: 4px;
+}
+
+.low-sub-tags__metric--sub .low-sub-tags__metric-label {
+  font-size: 10px;
+  color: #7a8a9e;
+}
+
+.low-sub-tags__metric--sub .low-sub-tags__metric-value {
+  font-size: 10px;
+  font-weight: 500;
+}
+
 .low-sub-tags__metric-label {
   flex-shrink: 0;
   display: inline-flex;
@@ -419,6 +433,10 @@ a.link:hover {
 
 .low-sub-tags__metric-value--sediment {
   color: #e8c878;
+}
+
+.low-sub-tags__metric-value--warn {
+  color: #e8b090;
 }
 
 .low-sub-tags__industry {

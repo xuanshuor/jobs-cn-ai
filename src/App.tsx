@@ -92,7 +92,10 @@ export function App({ dataSource }: { dataSource: DataSource }) {
       }
       footer={
         <>
-          <LowSubstitutionJobTags jobs={dataset.jobs} />
+          <LowSubstitutionJobTags
+            jobs={dataset.jobs}
+            employmentUnit={dataset.meta.employmentUnit}
+          />
           <Methodology />
         </>
       }
