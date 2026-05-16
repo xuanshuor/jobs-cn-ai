@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import type { AssessmentResult } from "@/assessment/types";
-import { buildShareUrl } from "@/assessment/share";
+import { SHARE_LINK_COPY_HINT, buildShareUrl } from "@/assessment/share";
 import { downloadBlob, renderAssessmentShareImage } from "@/assessment/shareImage";
 
 export function AssessmentShareActions({ result }: { result: AssessmentResult }) {
@@ -25,7 +25,7 @@ export function AssessmentShareActions({ result }: { result: AssessmentResult })
       }
       setStatus("链接已复制，可粘贴到微信、QQ 等聊天窗口发送");
     } catch {
-      setStatus("复制失败，请长按下方链接手动复制");
+      setStatus("复制失败，请重试「复制」或「复制链接」");
     }
   }, [shareUrl]);
 
@@ -81,8 +81,10 @@ export function AssessmentShareActions({ result }: { result: AssessmentResult })
       <p className="assessment-hint">
         复制链接发给好友，或保存图片后在微信中选择相册发送；对方打开链接可查看相同结果。
       </p>
-      <div className="assessment-share__url" title={shareUrl}>
-        <span className="assessment-share__url-text">{shareUrl}</span>
+      <div className="assessment-share__url" role="group" aria-label="分享链接，点击复制">
+        <span className="assessment-share__url-text assessment-share__url-text--hint">
+          {SHARE_LINK_COPY_HINT}
+        </span>
         <button
           type="button"
           className="assessment-share__url-copy"

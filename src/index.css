@@ -753,6 +753,13 @@ code {
   word-break: break-all;
 }
 
+.assessment-share__url-text--hint {
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(169, 182, 206, 0.88);
+  word-break: normal;
+}
+
 .assessment-share__url-copy {
   flex-shrink: 0;
   padding: 4px 10px;

@@ -23,6 +23,7 @@ import {
 } from "@/config/theme";
 import { FONT_UI_STACK } from "@/config/typography";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { fitTileLabel } from "./tileLabelFit";
 
 interface TreeNode {
   name: string;
@@ -88,6 +89,10 @@ interface TileLayout {
   showEmpLine: boolean;
   fontSize: number;
   metaSize: number;
+  titleLines: number;
+  displayTitle: string;
+  padPx: number;
+  centerContent: boolean;
 }
 
 function buildTileLayouts(nodes: TreemapNode[], mobile: boolean): TileLayout[] {
@@ -102,11 +107,7 @@ function buildTileLayouts(nodes: TreemapNode[], mobile: boolean): TileLayout[] {
     const rw = Math.max(0, w - 2 * g);
     const rh = Math.max(0, rectH - 2 * g);
     if (rw < 1 || rh < 1) continue;
-    const showText = mobile ? rw > 22 && rh > 11 : rw > 38 && rh > 16;
-    const showScoreLine = mobile ? rh >= 16 && rw >= 28 : rh >= 21 && rw >= 40;
-    const showEmpLine = mobile ? rh >= 20 && rw >= 30 : rh >= 27 && rw >= 44;
-    const fontSize = Math.min(12.5, Math.max(7.5, Math.min(rw / 10.5, rh / 3.6)));
-    const metaSize = Math.max(7, Math.round((fontSize - 1.25) * 10) / 10);
+    const label = fitTileLabel(job.title, rw, rh, mobile);
     const safe = job.id.replace(/[^a-zA-Z0-9_-]/g, "_");
     out.push({
       d,
@@ -115,11 +116,15 @@ function buildTileLayouts(nodes: TreemapNode[], mobile: boolean): TileLayout[] {
       rh,
       g,
       clipId: `cp-${idx}-${safe}`,
-      showText,
-      showScoreLine,
-      showEmpLine,
-      fontSize,
-      metaSize,
+      showText: label.showText,
+      showScoreLine: label.showScoreLine,
+      showEmpLine: label.showEmpLine,
+      fontSize: label.fontSize,
+      metaSize: label.metaSize,
+      titleLines: label.titleLines,
+      displayTitle: label.displayTitle,
+      padPx: label.padPx,
+      centerContent: label.centerContent,
     });
     idx += 1;
   }
@@ -247,7 +252,23 @@ export function JobTreemap({
         </defs>
         <rect width={width} height={height} fill={css.bg} rx={0} />
         {tileList.map((t) => {
-          const { d, job, rw, rh, g, clipId, showText, showScoreLine, showEmpLine, fontSize, metaSize } = t;
+          const {
+            d,
+            job,
+            rw,
+            rh,
+            g,
+            clipId,
+            showText,
+            showScoreLine,
+            showEmpLine,
+            fontSize,
+            metaSize,
+            titleLines,
+            displayTitle,
+            padPx,
+            centerContent,
+          } = t;
           const hovered = activeId === job.id;
           const fillA = hovered ? 0.82 : 0.55;
           const fill = impactTileFill(job.aiImpact, fillA, colorDomain);
@@ -313,11 +334,11 @@ export function JobTreemap({
                           width: "100%",
                           height: "100%",
                           boxSizing: "border-box",
-                          padding: "2px 4px",
+                          padding: `${padPx}px`,
                           display: "flex",
                           flexDirection: "column",
-                          justifyContent: "flex-start",
-                          rowGap: "0.08em",
+                          justifyContent: centerContent ? "center" : "flex-start",
+                          rowGap: "0.06em",
                           overflow: "hidden",
                           fontFamily: FONT_UI_STACK,
                         },
@@ -325,18 +346,22 @@ export function JobTreemap({
                     >
                       <div
                         style={{
-                          flex: showScoreLine ? "1 1 0" : "1 1 auto",
+                          flex: showScoreLine ? "1 1 0" : centerContent ? "0 0 auto" : "1 1 auto",
                           minHeight: 0,
                           fontSize: `${fontSize}px`,
                           fontWeight: 100,
-                          lineHeight: 1.22,
+                          lineHeight: 1.26,
                           color: hovered ? "#ffffff" : "rgba(248,250,252,0.94)",
                           overflow: "hidden",
                           overflowWrap: "anywhere",
                           wordBreak: "break-word",
+                          display: titleLines > 1 ? "-webkit-box" : "block",
+                          WebkitLineClamp: titleLines > 1 ? titleLines : undefined,
+                          WebkitBoxOrient: titleLines > 1 ? "vertical" : undefined,
+                          textAlign: centerContent ? "center" : "left",
                         }}
                       >
-                        {job.title}
+                        {displayTitle || job.title}
                       </div>
                       {showScoreLine ? (
                         <div

@@ -42,6 +42,10 @@ function isAssessmentResult(v: unknown): v is AssessmentResult {
   );
 }
 
+/** 分享区链接框占位文案（仅示意；复制时仍为完整分享 URL） */
+export const SHARE_LINK_COPY_HINT =
+  "点击「复制」获取分享链接，粘贴到微信、QQ 等聊天窗口发送";
+
 /** 公网站点根 URL，用于生成可分享的链接 */
 export function getPublicSiteBase(): string {
   const fromEnv = import.meta.env.VITE_PUBLIC_SITE_URL?.trim();
