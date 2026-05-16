@@ -72,9 +72,9 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 7.3,
+        "p5": 7.2,
         "p50": 7.7,
-        "p95": 8.0
+        "p95": 8.1
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -889,8 +889,8 @@
       },
       "aiImpactUncertainty": {
         "p5": 7.9,
-        "p50": 8.3,
-        "p95": 8.6
+        "p50": 8.2,
+        "p95": 8.5
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -1037,7 +1037,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 7.0,
+        "p5": 7.1,
         "p50": 7.5,
         "p95": 7.8
       },
@@ -1631,7 +1631,7 @@
       },
       "aiImpactUncertainty": {
         "p5": 5.7,
-        "p50": 6.1,
+        "p50": 6.2,
         "p95": 6.6
       },
       "substitutionMethodology": {
@@ -2080,7 +2080,7 @@
       },
       "aiImpactUncertainty": {
         "p5": 5.9,
-        "p50": 6.4,
+        "p50": 6.3,
         "p95": 6.8
       },
       "substitutionMethodology": {
@@ -2384,7 +2384,7 @@
       "aiImpactUncertainty": {
         "p5": 7.2,
         "p50": 7.6,
-        "p95": 8.0
+        "p95": 7.9
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -3130,7 +3130,7 @@
       "aiImpactUncertainty": {
         "p5": 7.6,
         "p50": 7.9,
-        "p95": 8.3
+        "p95": 8.2
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -3352,7 +3352,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 6.9,
+        "p5": 7.0,
         "p50": 7.4,
         "p95": 7.8
       },
@@ -3428,7 +3428,7 @@
       "aiImpactUncertainty": {
         "p5": 6.0,
         "p50": 6.5,
-        "p95": 7.0
+        "p95": 6.9
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -3502,7 +3502,7 @@
       },
       "aiImpactUncertainty": {
         "p5": 5.6,
-        "p50": 6.1,
+        "p50": 6.2,
         "p95": 6.7
       },
       "substitutionMethodology": {
@@ -3651,7 +3651,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 5.4,
+        "p5": 5.5,
         "p50": 6.1,
         "p95": 6.6
       },
@@ -3957,7 +3957,7 @@
       "aiImpactUncertainty": {
         "p5": 1.6,
         "p50": 1.9,
-        "p95": 2.4
+        "p95": 2.3
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -4030,9 +4030,9 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 1.5,
+        "p5": 1.4,
         "p50": 1.7,
-        "p95": 2.1
+        "p95": 2.0
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -4400,7 +4400,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 5.4,
+        "p5": 5.5,
         "p50": 6.0,
         "p95": 6.4
       },
@@ -4710,7 +4710,7 @@
       "aiImpactUncertainty": {
         "p5": 5.6,
         "p50": 6.1,
-        "p95": 6.6
+        "p95": 6.5
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -4783,7 +4783,7 @@
       },
       "aiImpactUncertainty": {
         "p5": 1.5,
-        "p50": 1.7,
+        "p50": 1.8,
         "p95": 2.1
       },
       "substitutionMethodology": {
@@ -4858,7 +4858,7 @@
       "aiImpactUncertainty": {
         "p5": 5.3,
         "p50": 5.9,
-        "p95": 6.3
+        "p95": 6.4
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -5602,7 +5602,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 6.7,
+        "p5": 6.6,
         "p50": 7.1,
         "p95": 7.5
       },
@@ -5676,8 +5676,8 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 7.2,
-        "p50": 7.6,
+        "p5": 7.1,
+        "p50": 7.5,
         "p95": 7.9
       },
       "substitutionMethodology": {
@@ -5752,7 +5752,7 @@
       "aiImpactUncertainty": {
         "p5": 7.0,
         "p50": 7.5,
-        "p95": 7.8
+        "p95": 7.9
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -6047,7 +6047,7 @@
       },
       "aiImpactUncertainty": {
         "p5": 1.6,
-        "p50": 1.9,
+        "p50": 1.8,
         "p95": 2.2
       },
       "substitutionMethodology": {
@@ -6269,7 +6269,7 @@
       },
       "aiImpactUncertainty": {
         "p5": 7.1,
-        "p50": 7.6,
+        "p50": 7.5,
         "p95": 7.9
       },
       "substitutionMethodology": {
@@ -7082,8 +7082,8 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 7.1,
-        "p50": 7.4,
+        "p5": 7.0,
+        "p50": 7.5,
         "p95": 7.8
       },
       "substitutionMethodology": {
@@ -7304,7 +7304,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 6.9,
+        "p5": 6.8,
         "p50": 7.3,
         "p95": 7.7
       },
@@ -7378,9 +7378,9 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 7.1,
+        "p5": 7.0,
         "p50": 7.5,
-        "p95": 7.8
+        "p95": 7.9
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -7526,8 +7526,8 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 7.1,
-        "p50": 7.5,
+        "p5": 7.0,
+        "p50": 7.4,
         "p95": 7.8
       },
       "substitutionMethodology": {
@@ -7748,7 +7748,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 5.3,
+        "p5": 5.2,
         "p50": 5.8,
         "p95": 6.4
       },
@@ -7822,7 +7822,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 6.9,
+        "p5": 7.0,
         "p50": 7.4,
         "p95": 7.8
       },
@@ -7970,7 +7970,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 6.9,
+        "p5": 7.0,
         "p50": 7.4,
         "p95": 7.7
       },
@@ -8712,7 +8712,7 @@
       "aiImpactUncertainty": {
         "p5": 7.0,
         "p50": 7.4,
-        "p95": 7.7
+        "p95": 7.8
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -8858,9 +8858,9 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 7.1,
+        "p5": 7.0,
         "p50": 7.5,
-        "p95": 7.8
+        "p95": 7.9
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -8932,7 +8932,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 6.9,
+        "p5": 7.0,
         "p50": 7.4,
         "p95": 7.7
       },
@@ -9081,7 +9081,7 @@
       },
       "aiImpactUncertainty": {
         "p5": 7.0,
-        "p50": 7.5,
+        "p50": 7.4,
         "p95": 7.8
       },
       "substitutionMethodology": {
@@ -9307,7 +9307,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 7.1,
+        "p5": 7.0,
         "p50": 7.5,
         "p95": 7.8
       },
@@ -9685,7 +9685,7 @@
       },
       "aiImpactUncertainty": {
         "p5": 6.9,
-        "p50": 7.3,
+        "p50": 7.4,
         "p95": 7.7
       },
       "substitutionMethodology": {
@@ -9906,7 +9906,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 5.4,
+        "p5": 5.3,
         "p50": 5.9,
         "p95": 6.4
       },
@@ -10130,7 +10130,7 @@
       "aiImpactUncertainty": {
         "p5": 1.5,
         "p50": 1.8,
-        "p95": 2.2
+        "p95": 2.1
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -10647,7 +10647,7 @@
       },
       "aiImpactUncertainty": {
         "p5": 5.1,
-        "p50": 5.5,
+        "p50": 5.6,
         "p95": 6.0
       },
       "substitutionMethodology": {
@@ -10720,7 +10720,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 5.1,
+        "p5": 5.0,
         "p50": 5.6,
         "p95": 6.0
       },
@@ -10800,7 +10800,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 5.0,
+        "p5": 5.1,
         "p50": 5.6,
         "p95": 6.1
       },
@@ -12086,7 +12086,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 7.7,
+        "p5": 7.6,
         "p50": 8.0,
         "p95": 8.3
       },
@@ -12246,7 +12246,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 5.1,
+        "p5": 5.2,
         "p50": 5.6,
         "p95": 6.1
       },
@@ -12468,7 +12468,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 7.0,
+        "p5": 7.1,
         "p50": 7.5,
         "p95": 7.9
       },
@@ -12547,8 +12547,8 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 7.0,
-        "p50": 7.4,
+        "p5": 7.1,
+        "p50": 7.5,
         "p95": 7.8
       },
       "substitutionMethodology": {
@@ -12923,7 +12923,7 @@
       },
       "aiImpactUncertainty": {
         "p5": 7.6,
-        "p50": 7.9,
+        "p50": 8.0,
         "p95": 8.3
       },
       "substitutionMethodology": {
@@ -12997,8 +12997,8 @@
       },
       "aiImpactUncertainty": {
         "p5": 7.7,
-        "p50": 8.1,
-        "p95": 8.3
+        "p50": 8.0,
+        "p95": 8.4
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -13144,7 +13144,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 6.9,
+        "p5": 7.0,
         "p50": 7.4,
         "p95": 7.7
       },
@@ -13368,7 +13368,7 @@
       "aiImpactUncertainty": {
         "p5": 7.0,
         "p50": 7.5,
-        "p95": 7.9
+        "p95": 7.8
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -13597,7 +13597,7 @@
       "aiImpactUncertainty": {
         "p5": 7.0,
         "p50": 7.4,
-        "p95": 7.8
+        "p95": 7.7
       },
       "substitutionMethodology": {
         "modelId": "task-capability-academic-v2",
@@ -13750,7 +13750,7 @@
       },
       "aiImpactUncertainty": {
         "p5": 7.0,
-        "p50": 7.4,
+        "p50": 7.3,
         "p95": 7.7
       },
       "substitutionMethodology": {
@@ -14273,7 +14273,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 5.3,
+        "p5": 5.4,
         "p50": 5.9,
         "p95": 6.4
       },
@@ -15103,7 +15103,7 @@
         }
       },
       "aiImpactUncertainty": {
-        "p5": 6.9,
+        "p5": 7.0,
         "p50": 7.4,
         "p95": 7.7
       },
