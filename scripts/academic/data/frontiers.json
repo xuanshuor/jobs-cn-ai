@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "baseYear": 2025,
+  "description": "认知AI与具身机器人能力前沿；分数由公开基准归一化至[0,1]（示意标定，可随基准更新）",
+  "logistic": { "r": 0.38, "t0_offset_years": 4 },
+  "capabilities": {
+    "language": {
+      "ai_2025": 0.95,
+      "robot_2025": 0.1,
+      "benchmarks_ai": ["MMLU ~0.90+", "multilingual MT BLEU"],
+      "benchmarks_robot": ["speech UI limited"]
+    },
+    "reasoning": {
+      "ai_2025": 0.82,
+      "robot_2025": 0.05,
+      "benchmarks_ai": ["GPQA", "ARC-Challenge"],
+      "benchmarks_robot": []
+    },
+    "planning": {
+      "ai_2025": 0.72,
+      "robot_2025": 0.12,
+      "benchmarks_ai": ["AgentBench", "GAIA"],
+      "benchmarks_robot": ["task planning stacks"]
+    },
+    "creativity": {
+      "ai_2025": 0.68,
+      "robot_2025": 0.04,
+      "benchmarks_ai": ["human preference evals"],
+      "benchmarks_robot": []
+    },
+    "social": {
+      "ai_2025": 0.5,
+      "robot_2025": 0.12,
+      "benchmarks_ai": ["dialogue coherence"],
+      "benchmarks_robot": ["HRI pilots"]
+    },
+    "negotiation": {
+      "ai_2025": 0.48,
+      "robot_2025": 0.08,
+      "benchmarks_ai": ["negotiation sims"],
+      "benchmarks_robot": []
+    },
+    "emotion": {
+      "ai_2025": 0.52,
+      "robot_2025": 0.1,
+      "benchmarks_ai": ["sentiment / empathy proxies"],
+      "benchmarks_robot": []
+    },
+    "dexterity": {
+      "ai_2025": 0.15,
+      "robot_2025": 0.55,
+      "benchmarks_ai": ["tool-use limited"],
+      "benchmarks_robot": ["ManiSkill", "RoboMimic", "RT-X"]
+    },
+    "locomotion": {
+      "ai_2025": 0.08,
+      "robot_2025": 0.48,
+      "benchmarks_ai": [],
+      "benchmarks_robot": ["legged locomotion demos", "Habitat"]
+    },
+    "vision": {
+      "ai_2025": 0.78,
+      "robot_2025": 0.62,
+      "benchmarks_ai": ["MMMU", "COCO detection SOTA"],
+      "benchmarks_robot": ["industrial vision"]
+    },
+    "navigation": {
+      "ai_2025": 0.35,
+      "robot_2025": 0.52,
+      "benchmarks_ai": ["VLN proxies"],
+      "benchmarks_robot": ["SLAM / AMR fleets"]
+    },
+    "unstructured_env": {
+      "ai_2025": 0.08,
+      "robot_2025": 0.22,
+      "benchmarks_ai": [],
+      "benchmarks_robot": ["BEHAVIOR", "home robots"]
+    },
+    "risk_judgment": {
+      "ai_2025": 0.55,
+      "robot_2025": 0.18,
+      "benchmarks_ai": ["safety classifiers"],
+      "benchmarks_robot": ["collision avoidance"]
+    },
+    "legal_liability": {
+      "ai_2025": 0.4,
+      "robot_2025": 0.05,
+      "benchmarks_ai": ["compliance LLM checks"],
+      "benchmarks_robot": []
+    },
+    "multimodal": {
+      "ai_2025": 0.75,
+      "robot_2025": 0.35,
+      "benchmarks_ai": ["MMMU", "video QA"],
+      "benchmarks_robot": ["RGB-D manipulation"]
+    },
+    "self_correction": {
+      "ai_2025": 0.7,
+      "robot_2025": 0.25,
+      "benchmarks_ai": ["SWE-Bench", "HumanEval"],
+      "benchmarks_robot": ["failure recovery rates"]
+    }
+  }
+}

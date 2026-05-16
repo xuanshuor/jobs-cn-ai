@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "description": "标准化任务库；权重先验 w∝TimeShare×Criticality×EconomicValue，职业层再归一化",
+  "tasks": [
+    {
+      "id": "T_DATA_ENTRY",
+      "name": "结构化数据录入与核对",
+      "capabilities": { "language": 0.25, "reasoning": 0.35, "self_correction": 0.25, "multimodal": 0.15 },
+      "complexity": 0.12,
+      "regulation": 0.08,
+      "acceptance": 0.94,
+      "time_share": 0.14,
+      "criticality": 0.22,
+      "economic_value": 0.38
+    },
+    {
+      "id": "T_DOC_PROCESS",
+      "name": "文档/报表处理与归档",
+      "capabilities": { "language": 0.35, "reasoning": 0.3, "planning": 0.15, "self_correction": 0.2 },
+      "complexity": 0.18,
+      "regulation": 0.12,
+      "acceptance": 0.92,
+      "time_share": 0.12,
+      "criticality": 0.25,
+      "economic_value": 0.32
+    },
+    {
+      "id": "T_CUSTOMER_SCRIPT",
+      "name": "标准化客服/销售脚本执行",
+      "capabilities": { "language": 0.4, "social": 0.35, "emotion": 0.15, "self_correction": 0.1 },
+      "complexity": 0.2,
+      "regulation": 0.1,
+      "acceptance": 0.88,
+      "time_share": 0.15,
+      "criticality": 0.28,
+      "economic_value": 0.3
+    },
+    {
+      "id": "T_ANALYTICS",
+      "name": "数据分析与可视化",
+      "capabilities": { "reasoning": 0.4, "planning": 0.25, "language": 0.15, "creativity": 0.1, "self_correction": 0.1 },
+      "complexity": 0.42,
+      "regulation": 0.15,
+      "acceptance": 0.9,
+      "time_share": 0.1,
+      "criticality": 0.45,
+      "economic_value": 0.55
+    },
+    {
+      "id": "T_CODE_DELIVERY",
+      "name": "软件实现与测试",
+      "capabilities": { "reasoning": 0.35, "self_correction": 0.3, "planning": 0.2, "language": 0.15 },
+      "complexity": 0.48,
+      "regulation": 0.12,
+      "acceptance": 0.91,
+      "time_share": 0.12,
+      "criticality": 0.5,
+      "economic_value": 0.62
+    },
+    {
+      "id": "T_COMPLIANCE",
+      "name": "合规审核与风控",
+      "capabilities": { "legal_liability": 0.4, "reasoning": 0.3, "risk_judgment": 0.2, "language": 0.1 },
+      "complexity": 0.55,
+      "regulation": 0.82,
+      "acceptance": 0.72,
+      "time_share": 0.08,
+      "criticality": 0.75,
+      "economic_value": 0.5
+    },
+    {
+      "id": "T_EXPERT_DECISION",
+      "name": "专业判断与策略制定",
+      "capabilities": { "reasoning": 0.35, "creativity": 0.25, "risk_judgment": 0.25, "planning": 0.15 },
+      "complexity": 0.78,
+      "regulation": 0.45,
+      "acceptance": 0.68,
+      "time_share": 0.1,
+      "criticality": 0.88,
+      "economic_value": 0.72
+    },
+    {
+      "id": "T_STAKEHOLDER",
+      "name": "利益相关方沟通与谈判",
+      "capabilities": { "negotiation": 0.35, "social": 0.3, "emotion": 0.2, "language": 0.15 },
+      "complexity": 0.62,
+      "regulation": 0.28,
+      "acceptance": 0.7,
+      "time_share": 0.08,
+      "criticality": 0.7,
+      "economic_value": 0.58
+    },
+    {
+      "id": "T_PICK_PLACE",
+      "name": "拾放与装配",
+      "capabilities": { "dexterity": 0.45, "vision": 0.35, "self_correction": 0.1, "locomotion": 0.1 },
+      "complexity": 0.28,
+      "regulation": 0.12,
+      "acceptance": 0.9,
+      "time_share": 0.18,
+      "criticality": 0.35,
+      "economic_value": 0.42
+    },
+    {
+      "id": "T_MATERIAL_MOVE",
+      "name": "物料搬运与仓储",
+      "capabilities": { "locomotion": 0.35, "navigation": 0.3, "vision": 0.2, "dexterity": 0.15 },
+      "complexity": 0.22,
+      "regulation": 0.1,
+      "acceptance": 0.92,
+      "time_share": 0.16,
+      "criticality": 0.3,
+      "economic_value": 0.4
+    },
+    {
+      "id": "T_MACHINE_TEND",
+      "name": "设备值守与产线协同",
+      "capabilities": { "vision": 0.3, "dexterity": 0.25, "risk_judgment": 0.2, "self_correction": 0.15, "planning": 0.1 },
+      "complexity": 0.35,
+      "regulation": 0.18,
+      "acceptance": 0.88,
+      "time_share": 0.14,
+      "criticality": 0.42,
+      "economic_value": 0.45
+    },
+    {
+      "id": "T_FIELD_WORK",
+      "name": "非结构化现场作业",
+      "capabilities": { "unstructured_env": 0.35, "vision": 0.25, "dexterity": 0.2, "risk_judgment": 0.2 },
+      "complexity": 0.75,
+      "regulation": 0.25,
+      "acceptance": 0.65,
+      "time_share": 0.12,
+      "criticality": 0.55,
+      "economic_value": 0.38
+    },
+    {
+      "id": "T_INSPECTION",
+      "name": "质量检验与巡检",
+      "capabilities": { "vision": 0.45, "self_correction": 0.25, "reasoning": 0.15, "risk_judgment": 0.15 },
+      "complexity": 0.32,
+      "regulation": 0.2,
+      "acceptance": 0.9,
+      "time_share": 0.1,
+      "criticality": 0.48,
+      "economic_value": 0.44
+    },
+    {
+      "id": "T_AGRI_FIELD",
+      "name": "田间/圈舍作业",
+      "capabilities": { "unstructured_env": 0.3, "dexterity": 0.25, "locomotion": 0.25, "vision": 0.2 },
+      "complexity": 0.45,
+      "regulation": 0.12,
+      "acceptance": 0.82,
+      "time_share": 0.2,
+      "criticality": 0.38,
+      "economic_value": 0.35
+    },
+    {
+      "id": "T_CARE_PHYSICAL",
+      "name": "贴身护理与协助",
+      "capabilities": { "emotion": 0.25, "social": 0.25, "dexterity": 0.25, "unstructured_env": 0.25 },
+      "complexity": 0.82,
+      "regulation": 0.35,
+      "acceptance": 0.58,
+      "time_share": 0.22,
+      "criticality": 0.72,
+      "economic_value": 0.4
+    },
+    {
+      "id": "T_TEACH_DELIVER",
+      "name": "教学交付与辅导",
+      "capabilities": { "social": 0.3, "language": 0.25, "emotion": 0.2, "creativity": 0.15, "planning": 0.1 },
+      "complexity": 0.68,
+      "regulation": 0.22,
+      "acceptance": 0.62,
+      "time_share": 0.18,
+      "criticality": 0.65,
+      "economic_value": 0.48
+    },
+    {
+      "id": "T_MEDICAL_PROC",
+      "name": "诊疗/护理操作",
+      "capabilities": { "risk_judgment": 0.3, "dexterity": 0.25, "legal_liability": 0.2, "emotion": 0.15, "reasoning": 0.1 },
+      "complexity": 0.88,
+      "regulation": 0.78,
+      "acceptance": 0.52,
+      "time_share": 0.2,
+      "criticality": 0.92,
+      "economic_value": 0.65
+    },
+    {
+      "id": "T_CREATIVE_WORK",
+      "name": "创意产出与品牌表达",
+      "capabilities": { "creativity": 0.45, "language": 0.2, "multimodal": 0.2, "social": 0.15 },
+      "complexity": 0.72,
+      "regulation": 0.15,
+      "acceptance": 0.75,
+      "time_share": 0.1,
+      "criticality": 0.6,
+      "economic_value": 0.55
+    },
+    {
+      "id": "T_LOGISTICS_ROUTE",
+      "name": "运输调度与路线执行",
+      "capabilities": { "navigation": 0.4, "planning": 0.25, "vision": 0.2, "risk_judgment": 0.15 },
+      "complexity": 0.38,
+      "regulation": 0.22,
+      "acceptance": 0.85,
+      "time_share": 0.14,
+      "criticality": 0.4,
+      "economic_value": 0.42
+    },
+    {
+      "id": "T_MAINTENANCE",
+      "name": "设备维护与故障排除",
+      "capabilities": { "reasoning": 0.3, "dexterity": 0.25, "vision": 0.2, "risk_judgment": 0.15, "self_correction": 0.1 },
+      "complexity": 0.52,
+      "regulation": 0.18,
+      "acceptance": 0.86,
+      "time_share": 0.1,
+      "criticality": 0.55,
+      "economic_value": 0.48
+    },
+    {
+      "id": "T_AML_KYC",
+      "name": "反洗钱/KYC与合规报送",
+      "capabilities": { "legal_liability": 0.35, "reasoning": 0.3, "language": 0.2, "self_correction": 0.15 },
+      "complexity": 0.38,
+      "regulation": 0.88,
+      "acceptance": 0.78,
+      "time_share": 0.1,
+      "criticality": 0.72,
+      "economic_value": 0.45
+    },
+    {
+      "id": "T_CREDIT_RISK",
+      "name": "信贷审批/信评与风控建模",
+      "capabilities": { "reasoning": 0.4, "risk_judgment": 0.35, "planning": 0.15, "language": 0.1 },
+      "complexity": 0.55,
+      "regulation": 0.75,
+      "acceptance": 0.8,
+      "time_share": 0.12,
+      "criticality": 0.78,
+      "economic_value": 0.58
+    },
+    {
+      "id": "T_TRADING_OPS",
+      "name": "交易执行、清算与对账",
+      "capabilities": { "reasoning": 0.35, "self_correction": 0.3, "planning": 0.2, "risk_judgment": 0.15 },
+      "complexity": 0.45,
+      "regulation": 0.55,
+      "acceptance": 0.85,
+      "time_share": 0.11,
+      "criticality": 0.65,
+      "economic_value": 0.52
+    },
+    {
+      "id": "T_WEALTH_ADVISORY",
+      "name": "投顾/资产配置与客户关系",
+      "capabilities": { "negotiation": 0.3, "social": 0.25, "emotion": 0.2, "risk_judgment": 0.15, "creativity": 0.1 },
+      "complexity": 0.72,
+      "regulation": 0.62,
+      "acceptance": 0.58,
+      "time_share": 0.14,
+      "criticality": 0.82,
+      "economic_value": 0.68
+    },
+    {
+      "id": "T_CLAIMS_UNDERWRITING",
+      "name": "保险理赔/核保与定损核查",
+      "capabilities": { "vision": 0.25, "reasoning": 0.3, "risk_judgment": 0.25, "language": 0.2 },
+      "complexity": 0.58,
+      "regulation": 0.7,
+      "acceptance": 0.72,
+      "time_share": 0.12,
+      "criticality": 0.7,
+      "economic_value": 0.5
+    }
+  ]
+}

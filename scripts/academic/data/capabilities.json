@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "description": "16维能力空间，对齐 O*NET Skills/Abilities 与 README §6.1",
+  "capabilities": [
+    {
+      "id": "language",
+      "name": "语言理解",
+      "onet_hint": "Reading Comprehension / Writing",
+      "benchmark_refs": ["MMLU", "HELM"]
+    },
+    {
+      "id": "reasoning",
+      "name": "逻辑推理",
+      "onet_hint": "Deductive Reasoning",
+      "benchmark_refs": ["GPQA", "ARC"]
+    },
+    {
+      "id": "planning",
+      "name": "长链规划",
+      "onet_hint": "Complex Problem Solving",
+      "benchmark_refs": ["AgentBench", "GAIA"]
+    },
+    {
+      "id": "creativity",
+      "name": "创造力",
+      "onet_hint": "Originality / Fluency of Ideas",
+      "benchmark_refs": ["Human evaluation suites"]
+    },
+    {
+      "id": "social",
+      "name": "社交互动",
+      "onet_hint": "Social Perceptiveness",
+      "benchmark_refs": ["SocioBench (proxy)"]
+    },
+    {
+      "id": "negotiation",
+      "name": "谈判能力",
+      "onet_hint": "Negotiation",
+      "benchmark_refs": ["Expert-rated scenarios"]
+    },
+    {
+      "id": "emotion",
+      "name": "情绪理解",
+      "onet_hint": "Emotional Intelligence",
+      "benchmark_refs": ["EQ-Bench (proxy)"]
+    },
+    {
+      "id": "dexterity",
+      "name": "精细操作",
+      "onet_hint": "Manual Dexterity",
+      "benchmark_refs": ["ManiSkill", "RoboMimic"]
+    },
+    {
+      "id": "locomotion",
+      "name": "大范围运动",
+      "onet_hint": "Gross Body Coordination",
+      "benchmark_refs": ["Habitat", "BEHAVIOR"]
+    },
+    {
+      "id": "vision",
+      "name": "实时视觉",
+      "onet_hint": "Near Vision / Visual Color Discrimination",
+      "benchmark_refs": ["MMMU", "RT-X vision"]
+    },
+    {
+      "id": "navigation",
+      "name": "空间导航",
+      "onet_hint": "Spatial Orientation",
+      "benchmark_refs": ["Habitat navigation", "ALFRED"]
+    },
+    {
+      "id": "unstructured_env",
+      "name": "非结构化环境适应",
+      "onet_hint": "Adaptability/Flexibility",
+      "benchmark_refs": ["BEHAVIOR", "Open X-Embodiment"]
+    },
+    {
+      "id": "risk_judgment",
+      "name": "风险判断",
+      "onet_hint": "Problem Sensitivity",
+      "benchmark_refs": ["Domain safety benchmarks"]
+    },
+    {
+      "id": "legal_liability",
+      "name": "法律责任承担",
+      "onet_hint": "Responsibility for Outcomes",
+      "benchmark_refs": ["Regulatory frameworks"]
+    },
+    {
+      "id": "multimodal",
+      "name": "多模态融合",
+      "onet_hint": "Cross-modal integration",
+      "benchmark_refs": ["MMMU", "Gemini evals"]
+    },
+    {
+      "id": "self_correction",
+      "name": "自主纠错",
+      "onet_hint": "Quality Control Analysis",
+      "benchmark_refs": ["SWE-Bench", "HumanEval"]
+    }
+  ]
+}
